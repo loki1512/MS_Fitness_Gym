@@ -16,8 +16,36 @@
 
 <body>
   <a href="/catalog">Catalog Management</a>
-  <h3>Billing</h3>
+  <!-- Customer Details -->
+<div class="customer-section">
+  <label>
+    <input type="checkbox" id="toggleCustomer">
+    Add Customer Details
+  </label>
 
+  <div id="customerFields" style="display:none; margin-top:8px;">
+    <input
+      type="text"
+      id="customerName"
+      placeholder="Customer Name"
+    />
+
+    <input
+      type="text"
+      id="customerPhone"
+      placeholder="Phone Number"
+    />
+
+    <textarea
+      id="customerAddress"
+      placeholder="Address"
+      rows="2"
+    ></textarea>
+  </div>
+</div>
+
+  <h3>Billing</h3>
+  
   <!-- ITEM ENTRY -->
   <div>
     <input id="itemName" placeholder="Item name" autofocus />

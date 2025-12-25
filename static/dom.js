@@ -5,6 +5,12 @@ export function initDom() {
   dom.billDiscountValue = document.getElementById("billDiscountValue");
   dom.finalSubtotal = document.getElementById("finalSubtotal");
   dom.finalAmount = document.getElementById("finalAmount");
+  dom.toggleCustomer = document.getElementById("toggleCustomer");
+dom.customerFields = document.getElementById("customerFields");
+dom.customerName = document.getElementById("customerName");
+dom.customerPhone = document.getElementById("customerPhone");
+dom.customerAddress = document.getElementById("customerAddress");
+
 
   dom.itemName = document.getElementById("itemName");
   dom.qty = document.getElementById("qty");
