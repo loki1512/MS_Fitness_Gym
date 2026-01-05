@@ -1,90 +1,142 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>Bill #{{ bill.id }}</title>
   <link rel="stylesheet" href="/static/css/bill_detail.css">
+
+  <!-- PRINT STYLES (ADDED) -->
+  <style>
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+
+      #bill-print-area,
+      #bill-print-area * {
+        visibility: visible;
+      }
+
+      #bill-print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+
+      button {
+        display: none;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="invoice">
+<!-- PRINTABLE AREA START -->
+<div id="bill-print-area">
 
-  <header>
-    <h2>Invoice</h2>
-    <p>Bill #{{ bill.id }}</p>
-    <p>{{ bill.timestamp.strftime('%d %b %Y %H:%M') }}</p>
-  </header>
+  <div class="invoice">
 
-  <section class="customer">
-    <strong>Customer:</strong>
-    <p>{{ bill.customer_name or 'Walk-in' }}</p>
-    {% if bill.customer_phone %}
-      <p>{{ bill.customer_phone }}</p>
-    {% endif %}
-    {% if bill.customer_address %}
-      <p>{{ bill.customer_address }}</p>
-    {% endif %}
-  </section>
+    <header style="text-align:center; margin-bottom:15px;">
+  <h1 style="margin:0;">Kumara Swami Agencies</h1>
+  <p style="margin:2px 0;">
+    Near SBI ATM, Ravindra Nagar<br>
+    Galiveedu – 516267
+  </p>
+  <p style="margin:2px 0;">📞 9490608943</p>
 
-  <table class="items">
-    <thead>
-      <tr>
-        <th>Item</th>
-        <th>Qty</th>
-        <th>MRP</th>
-        <th>Discount</th>
-        <th>Rate</th>
-        <th>Amount</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for i in items %}
-      <tr>
-        <td>{{ i.item_name }}</td>
-        <td>{{ i.qty }}</td>
-        {% set discount_value = i.item_discount_value or 0 %}
+  <hr style="margin:10px 0;">
 
-{% set discount =
-  discount_value
-  if i.item_discount_type == '₹'
-  else (i.unit_price * discount_value / 100)
-%}
+  <h2 style="margin:5px 0;">Invoice</h2>
+  <p style="margin:2px 0;">Bill #{{ bill.id }}</p>
+  <p style="margin:2px 0;">{{ bill.timestamp.strftime('%d %b %Y %H:%M') }}</p>
+</header>
 
-<td>₹{{ "%.2f"|format(i.unit_price + discount) }}</td>
+    <section class="customer">
+      <strong>Customer:</strong>
+      <p>{{ bill.customer_name or 'Walk-in' }}</p>
+      {% if bill.customer_phone %}
+        <p>{{ bill.customer_phone }}</p>
+      {% endif %}
+      {% if bill.customer_address %}
+        <p>{{ bill.customer_address }}</p>
+      {% endif %}
+    </section>
 
-        <td>
-          {% if i.item_discount_type == '₹' %}
-            ₹{{ "%.2f"|format(i.item_discount_value) }}
-          {% elif i.item_discount_type == '%' %}
-            {{ "%.2f"|format(i.item_discount_value) }}%
-          {% else %}
-            -
-          {% endif %}
-        <td>₹{{ "%.2f"|format(i.unit_price) }}</td>
-        <td>₹{{ "%.2f"|format(i.final_item_amount) }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    <table class="items">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Qty</th>
+          <th>MRP</th>
+          <th>Discount</th>
+          <th>Rate</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in items %}
+        <tr>
+          <td>{{ i.item_name }}</td>
+          <td>{{ i.qty }}</td>
 
-  <section class="totals">
-    <p>Subtotal: ₹{{ "%.2f"|format(bill.subtotal) }}</p>
-    {% if bill.bill_discount_value %}
-      <p>Discount: {{ bill.bill_discount_type }} {{ bill.bill_discount_value }}</p>
-    {% endif %}
-    <p class="final">Final: ₹{{ "%.2f"|format(bill.final_amount) }}</p>
-  </section>
+          {% set discount_value = i.item_discount_value or 0 %}
+          {% set discount =
+            discount_value
+            if i.item_discount_type == '₹'
+            else (i.unit_price * discount_value / 100)
+          %}
+
+          <td>₹{{ "%.2f"|format(i.unit_price + discount) }}</td>
+
+          <td>
+            {% if i.item_discount_type == '₹' %}
+              ₹{{ "%.2f"|format(i.item_discount_value) }}
+            {% elif i.item_discount_type == '%' %}
+              {{ "%.2f"|format(i.item_discount_value) }}%
+            {% else %}
+              -
+            {% endif %}
+          </td>
+
+          <td>₹{{ "%.2f"|format(i.unit_price) }}</td>
+          <td>₹{{ "%.2f"|format(i.final_item_amount) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <section class="totals">
+      <p>Subtotal: ₹{{ "%.2f"|format(bill.subtotal) }}</p>
+      {% if bill.bill_discount_value %}
+        <p>Discount: {{ bill.bill_discount_type }} {{ bill.bill_discount_value }}</p>
+      {% endif %}
+      <p class="final">Final: ₹{{ "%.2f"|format(bill.final_amount) }}</p>
+    </section>
+
+  </div>
 
 </div>
+<!-- PRINTABLE AREA END -->
+
+<!-- EXISTING BUTTON -->
 <button onclick="sendWhatsApp()">
   📲 Send Bill on WhatsApp
 </button>
 
+<!-- NEW PRINT BUTTON (ADDED) -->
+<button onclick="printBill()">
+  🖨️ Print Bill
+</button>
 
 </body>
+
 <script>
   function sendWhatsApp() {
     const phone = "{{ bill.customer_phone }}";
     console.log("phone:", phone);
+
     if (!phone) {
       alert("Customer phone number is not available.");
       return;
@@ -93,10 +145,26 @@
       alert("Invalid phone number.");
       return;
     }
-    const bill_link = "ksa-2-0.onrender.com/bills/{{ bill.id }}";
-    const message = encodeURIComponent(`Hello {{ bill.customer_name or 'Customer' }}, your bill amount is ₹{{ "%.2f"|format(bill.final_amount) }}. You can view your bill here: ${bill_link} Thank you for your business!`);
+
+    const bill_link = "https://ksa-2-0.onrender.com/bills/{{ bill.id }}";
+
+    const message = encodeURIComponent(
+      ` *KS Agencies*\n\n` +
+      `Hello *{{ bill.customer_name or 'Customer' }}*,\n\n` +
+      `Thank you for shopping with us.\n` +
+      `Your bill amount is *₹{{ "%.2f"|format(bill.final_amount) }}*.\n\n` +
+      `View your bill here:\n${bill_link}\n\n` +
+      `Thank you for your business !`
+    );
+
     const url = `https://wa.me/91${phone}?text=${message}`;
     window.open(url, '_blank');
   }
-  </script>
+
+  /* PRINT FUNCTION (ADDED) */
+  function printBill() {
+    window.print();
+  }
+</script>
+
 </html>

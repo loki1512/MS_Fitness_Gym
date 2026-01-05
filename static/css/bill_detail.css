@@ -109,7 +109,7 @@ button {
   display: block;
   width: 100%;
   max-width: 720px;      /* match invoice width */
-  margin: 0 auto;
+  margin: 5px auto;
   padding: 14px;
   background: #22c55e;
   color: #ffffff;
@@ -118,6 +118,7 @@ button {
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
+  
 }
 
 button:hover {
@@ -149,6 +150,7 @@ button:hover {
 
   button {
     display: none;
+    margin:5px;
   }
 
   .invoice {
