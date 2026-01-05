@@ -93,7 +93,7 @@
       alert("Invalid phone number.");
       return;
     }
-    const bill_link = "ksa-2-0.onrender.com/bill/{{ bill.id }}";
+    const bill_link = "ksa-2-0.onrender.com/bills/{{ bill.id }}";
     const message = encodeURIComponent(`Hello {{ bill.customer_name or 'Customer' }}, your bill amount is ₹{{ "%.2f"|format(bill.final_amount) }}. You can view your bill here: ${bill_link} Thank you for your business!`);
     const url = `https://wa.me/91${phone}?text=${message}`;
     window.open(url, '_blank');
