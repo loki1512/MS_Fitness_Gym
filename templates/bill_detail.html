@@ -41,7 +41,16 @@
       <tr>
         <td>{{ i.item_name }}</td>
         <td>{{ i.qty }}</td>
-        <td>₹{{ "%.2f"|format(i.unit_price + (i.item_discount_value if i.item_discount_type == '₹' else (i.unit_price * i.item_discount_value / 100))) }}</td>
+        {% set discount_value = i.item_discount_value or 0 %}
+
+{% set discount =
+  discount_value
+  if i.item_discount_type == '₹'
+  else (i.unit_price * discount_value / 100)
+%}
+
+<td>₹{{ "%.2f"|format(i.unit_price + discount) }}</td>
+
         <td>
           {% if i.item_discount_type == '₹' %}
             ₹{{ "%.2f"|format(i.item_discount_value) }}
