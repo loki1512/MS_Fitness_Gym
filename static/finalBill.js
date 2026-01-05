@@ -41,7 +41,6 @@ export function openFinalScreen() {
 
   updateFinalBill();
 
-  // 🔒 SNAPSHOT (THIS WAS BECOMING NaN BEFORE)
   state.bill = {
     subtotal: state.subtotal,
     billDiscount: {
@@ -95,15 +94,13 @@ export async function saveBill() {
   return await res.json();
 }
 
-
+/* ---------- Calculate bill payload ---------- */
 function calculateBill() {
-  // 1. Subtotal from items (true source of truth)
   const subtotal = state.items.reduce(
     (sum, it) => sum + Number(it.final || 0),
     0
   );
 
-  // 2. Bill discount from DOM (latest input)
   const dtype = dom.billDiscountType?.value || null;
   const dval = parseFloat(dom.billDiscountValue?.value || 0);
 
@@ -126,19 +123,17 @@ function calculateBill() {
     };
   }
 
-  // 3. Customer details (optional, boundary-only)
-  let customer = null;
+  // ✅ always defined
+  let customer_name = null;
+  let customer_phone = null;
+  let customer_address = null;
+
   if (dom.toggleCustomer?.checked) {
-    const name = dom.customerName.value.trim();
-    const phone = dom.customerPhone.value.trim();
-    const address = dom.customerAddress.value.trim();
+    customer_name = dom.customerName.value.trim() || null;
+    customer_phone = dom.customerPhone.value.trim() || null;
+    customer_address = dom.customerAddress.value.trim() || null;
+  }
 
-  
-      const customer_name= name;
-      const customer_phone= phone;
-      const customer_address= address;
-
-  // 4. Final payload
   return {
     subtotal,
     finalTotal,
@@ -146,7 +141,6 @@ function calculateBill() {
     customer_name,
     customer_phone,
     customer_address,
-
     items: state.items.map(it => ({
       name: it.name,
       qty: it.qty,
@@ -160,5 +154,4 @@ function calculateBill() {
       lineTotal: it.final
     }))
   };
-}
 }
