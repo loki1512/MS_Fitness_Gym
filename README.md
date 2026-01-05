@@ -1,10 +1,9 @@
-<p align="center">
-  <img src="assets/ksa-hero.gif" width="720" />
-</p>
+
 
 <h1 align="center">KSA Assistant</h1>
 
 <p align="center">
+ 
   <em>
     A lightweight billing and catalogue system built for real retail workflows —
     not enterprise rigidity.
@@ -14,7 +13,9 @@
 <p align="center">
   <strong>Status:</strong> v1.0 completed · Actively used · Data-driven roadmap
 </p>
-
+ <p align="center">
+  <img src="static/hero.png" width="720" />
+</p>
 ---
 
 ## Why KSA Assistant exists
