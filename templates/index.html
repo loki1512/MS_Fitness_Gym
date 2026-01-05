@@ -3,19 +3,12 @@
 <head>
   <title>Billing</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body { font-family: sans-serif; padding: 12px; }
-    input, select, button { padding: 8px; margin: 4px 0; width: 100%; }
-    .row { display: flex; gap: 8px; }
-    .row > * { flex: 1; }
-    .item { border-bottom: 1px solid #ddd; padding: 6px 0; }
-    .right { text-align: right; }
-    .small { font-size: 0.9em; color: #555; }
-  </style>
+  <link rel="stylesheet" href="/static/css/index.css">
 </head>
 
 <body>
   <a href="/catalog">Catalog Management</a>
+  <a href="/bills">Bills</a>
   <!-- Customer Details -->
 <div class="customer-section">
   <label>
@@ -121,6 +114,8 @@
 
   <button onclick="closeFinalScreen()">Back to Edit</button>
   <button id="confirmBillBtn">Confirm & Save Bill</button>
+  <button id="viewBillBtn"  onclick="viewBill()">
+    View Saved Bill</button>
 
 </div>
 

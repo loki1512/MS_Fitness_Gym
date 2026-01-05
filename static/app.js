@@ -48,6 +48,17 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("confirmBillBtn").onclick = async () => {
     console.log("bill:", state.bill);
     const result = await saveBill();
+    state.savedBillId = result.bill_id;
     alert(`Bill ${result.bill_id} saved`);
   };
+
+  //6. View saved bill
+  document.getElementById("viewBillBtn").onclick = async () => {
+    if (!state.savedBillId) {
+      alert("No saved bill to view.");
+      return;
+    }
+    window.open(`/bills/${state.savedBillId}`, "_blank");
+  };
+
 });

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bill History</title>
+  <link rel="stylesheet" href="/static/css/bills.css">
+</head>
+<body>
+
+<h2>Bill History</h2>
+
+<table class="bills-table">
+  <thead>
+    <tr>
+      <th>Bill #</th>
+      <th>Date</th>
+      <th>Customer</th>
+      <th>Amount</th>
+      <th>View Bill</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for bill in bills %}
+    <tr onclick="window.location='/bills/{{ bill.id }}'">
+      <td>{{ bill.id }}</td>
+      <td>{{ bill.timestamp.strftime('%d %b %Y %H:%M') }}</td>
+      <td>{{ bill.customer_name or 'Walk-in' }}</td>
+      <td>₹{{ "%.2f"|format(bill.final_amount) }}</td>
+      <td><a href="/bills/{{ bill.id }}">View</a></td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="4">No bills found.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<a href="/">← Back to Billing</a>
+
+</body>
+</html>
