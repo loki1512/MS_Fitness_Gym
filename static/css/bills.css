@@ -8,28 +8,135 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   background: #f3f4f6;
   margin: 0;
-  padding: 20px;
+  padding: 16px;
   color: #111827;
 }
 
-/* ===== Heading ===== */
-h2 {
-  max-width: 900px;
-  margin: 0 auto 16px;
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* ===== Site Header ===== */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  margin-bottom: 18px;
+
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.header-left h1 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.header-sub {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.header-nav a {
+  margin-left: 16px;
+  font-weight: 500;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.header-nav a.active {
+  text-decoration: underline;
+}
+
+/* ===== Page Header ===== */
+.page-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.page-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
   font-size: 1.4rem;
   font-weight: 600;
+}
+
+
+.page-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.back-link {
+  font-size: 0.9rem;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+/* ===== Filters ===== */
+.filters-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+
+  display: flex;
+  gap: 14px;
+  align-items: flex-end;
+}
+
+.filters-card input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.filters-card input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.date-filters {
+  display: flex;
+  gap: 10px;
+}
+
+.date-filters label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-bottom: 4px;
+  display: block;
+}
+
+/* ===== Table Card ===== */
+.table-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
 }
 
 /* ===== Table ===== */
 .bills-table {
   width: 100%;
-  max-width: 900px;
-  margin: 0 auto 16px;
   border-collapse: collapse;
-  background: #ffffff;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 .bills-table thead {
@@ -55,63 +162,87 @@ h2 {
   border-bottom: none;
 }
 
-/* ===== Hover / Clickable Row ===== */
-.bills-table tbody tr {
+/* ===== Row Interaction ===== */
+.bill-row {
   cursor: pointer;
   transition: background 0.15s ease;
 }
 
-.bills-table tbody tr:hover {
+.bill-row:hover {
   background: #f3f4f6;
 }
 
-/* ===== Amount ===== */
-.bills-table td:nth-child(4) {
-  font-weight: 600;
+/* ===== Amount & Links ===== */
+.right {
   text-align: right;
+  font-weight: 600;
 }
 
-/* ===== View Link ===== */
-.bills-table a {
+.view-link a {
   color: #2563eb;
   text-decoration: none;
   font-weight: 500;
 }
 
-.bills-table a:hover {
+.view-link a:hover {
   text-decoration: underline;
 }
 
 /* ===== Empty State ===== */
-.bills-table td[colspan] {
+.empty {
   text-align: center;
-  padding: 20px;
+  padding: 24px;
   color: #6b7280;
+  font-size: 0.9rem;
 }
 
-/* ===== Back Link ===== */
-a[href="/"] {
-  display: block;
-  max-width: 900px;
-  margin: 0 auto;
+/* ===== Footer ===== */
+.footer-back {
+  margin-top: 18px;
+  text-align: center;
+}
+
+.footer-back a {
   color: #2563eb;
-  text-decoration: none;
   font-weight: 500;
+  text-decoration: none;
 }
 
-a[href="/"]:hover {
+.footer-back a:hover {
   text-decoration: underline;
 }
 
 /* ===== Responsive ===== */
 @media (max-width: 600px) {
-  h2 {
-    font-size: 1.2rem;
+  .site-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .header-nav {
+    display: flex;
+    gap: 12px;
+  }
+
+  .filters-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .date-filters {
+    flex-direction: column;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
   }
 
   .bills-table th,
   .bills-table td {
-    padding: 8px;
     font-size: 0.8rem;
+    padding: 8px;
   }
 }

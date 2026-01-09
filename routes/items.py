@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from extensions import db
 from models import Item
-from sqlalchemy import func
+from sqlalchemy import func, and_
 import pandas as pd
 
 items_bp = Blueprint("items", __name__)
@@ -11,11 +11,22 @@ def search_items():
     q = request.args.get("q", "").strip()
     if not q:
         return jsonify([])
+    
+    # 1. Normalize input
+    keywords = q.lower().split()
+
+    # 2. Build AND conditions
+    conditions = [
+        Item.name.ilike(f"%{kw}%")
+        for kw in keywords
+    ]
+    
+    
 
     items = (
         Item.query
-        .filter(Item.name.ilike(f"%{q}%"))
-        .limit(5)
+        .filter(and_(*conditions))
+        .limit(10)
         .all()
     )
 

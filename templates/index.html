@@ -1,21 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Billing</title>
+  <title>Kumara Swami Agencies | Billing</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="/static/css/index.css">
 </head>
 
 <body>
-  <a href="/catalog">Catalog Management</a>
-  <a href="/bills">Bills</a>
+  <header class="site-header">
+  <div class="header-left">
+    <h1>Kumara Swami Agencies</h1>
+    <span class="header-sub">Smart billing system</span>
+  </div>
+
+  <nav class="header-nav">
+    <a href="/catalog">Catalog</a>
+    <a href="/bills">Bills</a>
+  </nav>
+</header>
+
   <!-- Customer Details -->
 <div class="customer-section">
-  <label>
+  <div class="customer-header">
+  <label for="toggleCustomer">
     <input type="checkbox" id="toggleCustomer">
-    Add Customer Details
+    <span>Add Customer Details</span>
   </label>
-
+</div>
   <div id="customerFields" style="display:none; margin-top:8px;">
     <input
       type="text"
@@ -40,6 +51,7 @@
   <h3>Billing</h3>
   
   <!-- ITEM ENTRY -->
+<div class="item-entry">
   <div>
     <input id="itemName" placeholder="Item name" autofocus />
     <div id="suggestions"
@@ -69,7 +81,7 @@
     <button id="addItemBtn" onclick="addItem()">+ Add Item</button>
 
   </div>
-
+</div>
   <hr />
 
   <!-- ITEM LIST -->
@@ -90,7 +102,7 @@
 
 
   <h3 class="right">Subtotal: ₹ <span id="subtotal">0.00</span></h3>
-<button id="finaliseBtn" onclick="openFinalScreen()">
+<button id="finaliseBtn" onclick="openFinalScreen()" class = "primary">
   Finalise Bill
 </button>
 
@@ -112,7 +124,7 @@
     Final Amount: ₹ <span id="finalAmount">0.00</span>
   </h3>
 
-  <button onclick="closeFinalScreen()">Back to Edit</button>
+  <button onclick="closeFinalScreen()" class="secondary">Back to Edit</button>
   <button id="confirmBillBtn">Confirm & Save Bill</button>
   <button id="viewBillBtn"  onclick="viewBill()">
     View Saved Bill</button>

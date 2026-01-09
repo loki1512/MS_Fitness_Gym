@@ -42,9 +42,14 @@ document.getElementById("catalogSearch").addEventListener("input", (e) => {
     return;
   }
 
-  const filtered = allItems.filter(item =>
-    item.name.toLowerCase().includes(q)
-  );
+  // 1. Split search into keywords
+  const keywords = q.split(/\s+/);
+
+  // 2. Every keyword must match somewhere in the item name
+  const filtered = allItems.filter(item => {
+    const name = item.name.toLowerCase();
+    return keywords.every(kw => name.includes(kw));
+  });
 
   renderCatalog(filtered);
 });

@@ -1,41 +1,101 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Bill History</title>
+  <title>Kumara Swami Agencies | Bill History</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="/static/css/bills.css">
 </head>
 <body>
 
-<h2>Bill History</h2>
+<div class="page">
 
-<table class="bills-table">
-  <thead>
-    <tr>
-      <th>Bill #</th>
-      <th>Date</th>
-      <th>Customer</th>
-      <th>Amount</th>
-      <th>View Bill</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for bill in bills %}
-    <tr onclick="window.location='/bills/{{ bill.id }}'">
-      <td>{{ bill.id }}</td>
-      <td>{{ bill.timestamp.strftime('%d %b %Y %H:%M') }}</td>
-      <td>{{ bill.customer_name or 'Walk-in' }}</td>
-      <td>₹{{ "%.2f"|format(bill.final_amount) }}</td>
-      <td><a href="/bills/{{ bill.id }}">View</a></td>
-    </tr>
-    {% else %}
-    <tr>
-      <td colspan="4">No bills found.</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+  <!-- SITE HEADER -->
+  <header class="site-header">
+    <div class="header-left">
+      <h1>Kumara Swami Agencies</h1>
+      <span class="header-sub">Smart billing system</span>
+    </div>
 
-<a href="/">← Back to Billing</a>
+    <nav class="header-nav">
+      <a href="/catalog">Catalog</a>
+      <a href="/bills" class="active">Bills</a>
+    </nav>
+  </header>
 
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <a class="back-link" href="/">← Back to Billing</a>
+    <h2 class="page-title">Bill History</h2>
+  </div>
+
+  <!-- FILTER CARD -->
+  <div class="filters-card">
+    <input
+      type="text"
+      id="billSearch"
+      placeholder="Search bill #, customer, amount"
+    />
+
+    <div class="date-filters">
+      <div>
+        <label>From</label>
+        <input type="date" id="fromDate" />
+      </div>
+      <div>
+        <label>To</label>
+        <input type="date" id="toDate" />
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE CARD -->
+  <div class="table-card">
+    <table class="bills-table">
+      <thead>
+        <tr>
+          <th>Bill #</th>
+          <th>Date</th>
+          <th>Customer</th>
+          <th class="right">Amount</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for bill in bills %}
+        <tr
+          class="bill-row"
+          data-id="{{ bill.id }}"
+          data-customer="{{ (bill.customer_name or 'Walk-in') | lower }}"
+          data-date="{{ bill.timestamp.strftime('%Y-%m-%d') }}"
+          data-text="{{ (bill.id ~ ' ' ~ (bill.customer_name or 'walk-in') ~ ' ' ~ bill.final_amount) | lower }}"
+          onclick="window.location='/bills/{{ bill.id }}'"
+        >
+          <td>#{{ bill.id }}</td>
+          <td>{{ bill.timestamp.strftime('%d %b %Y %H:%M') }}</td>
+          <td>{{ bill.customer_name or 'Walk-in' }}</td>
+          <td class="right">₹{{ "%.2f"|format(bill.final_amount) }}</td>
+          <td class="view-link">
+            <a href="/bills/{{ bill.id }}">View</a>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5" class="empty">
+            No bills found
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FOOTER BACK LINK -->
+  <div class="footer-back">
+    <a href="/">← Back to Billing</a>
+  </div>
+
+</div>
+
+<script src="/static/bills.js"></script>
 </body>
 </html>

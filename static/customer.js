@@ -4,7 +4,9 @@ export function initCustomerSection() {
   if (!dom.toggleCustomer) return;
 
   // Ensure initial state is hidden
-  dom.customerFields.style.display = "none";
+  // dom.customerFields.style.display = "none";
+  dom.customerFields.style.display =
+    dom.toggleCustomer.checked ? "block" : "none";
 
   dom.toggleCustomer.addEventListener("change", () => {
     if (dom.toggleCustomer.checked) {
