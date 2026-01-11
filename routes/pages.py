@@ -7,7 +7,7 @@ pages_bp = Blueprint("pages", __name__)
 def ping():
     return "pong"
 
-@pages_bp.route("/")
+@pages_bp.route("/billing")
 def index():
     return render_template("index.html")
 

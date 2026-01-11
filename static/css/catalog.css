@@ -132,32 +132,51 @@ button:hover {
   margin: 12px 0;
 }
 
+/* ===== Table Container (for horizontal scroll on mobile) ===== */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* ===== Table ===== */
 table {
   width: 100%;
+  min-width: 600px; /* prevents column squishing on small screens */
   border-collapse: collapse;
   background: #ffffff;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 thead {
   background: #f9fafb;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 th {
   text-align: left;
-  padding: 12px 10px;
-  font-size: 0.85rem;
+  padding: 14px 12px;
+  font-size: 0.8rem;
   font-weight: 600;
+  letter-spacing: 0.03em;
+  color: #374151;
   border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;
 }
 
 td {
-  padding: 10px;
+  padding: 12px;
   font-size: 0.9rem;
   border-bottom: 1px solid #f1f5f9;
+  color: #111827;
+}
+
+tr:hover td {
+  background: #f8fafc;
 }
 
 tr:last-child td {
@@ -170,9 +189,37 @@ td:last-child {
 }
 
 td button {
-  padding: 6px 10px;
+  padding: 8px 12px;
   font-size: 0.8rem;
-  margin-right: 4px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  margin-right: 6px;
+  transition: all 0.15s ease;
+}
+
+td button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(9, 8, 8, 0.12);
+  background: #1e4fd6;
+}
+
+/* ===== Mobile Optimization ===== */
+@media (max-width: 600px) {
+  table {
+    min-width: 100%;
+    border-radius: 0;
+  }
+
+  th, td {
+    padding: 10px 8px;
+    font-size: 0.8rem;
+  }
+
+  td button {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
 }
 
 /* ===== Import Section ===== */

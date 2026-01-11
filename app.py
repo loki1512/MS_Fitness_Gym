@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, app
 from extensions import db
 
 def create_app():
@@ -13,7 +13,9 @@ def create_app():
     from routes.pages import pages_bp
     from routes.items import items_bp
     from routes.bills import bills_bp
-
+    from dashboard import dashboard_bp
+    
+    app.register_blueprint(dashboard_bp)
     app.register_blueprint(pages_bp)
     app.register_blueprint(items_bp)
     app.register_blueprint(bills_bp)
