@@ -195,3 +195,14 @@ table {
     font-size: 0.95rem;
     margin-bottom: 6px;
 }
+
+.tab-card {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: white;
+}
+.tab-card .kpi-label {
+    color: rgba(255,255,255,0.8);
+}
+.tab-card:hover {
+    background: linear-gradient(135deg, #1d4ed8, #1e3a8a);
+}

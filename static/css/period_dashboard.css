@@ -1,0 +1,81 @@
+/* Period Navigation */
+.period-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.period-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.period-btn {
+    text-decoration: none;
+    color: #2563eb;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 6px 14px;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    transition: background 0.15s;
+}
+
+.period-btn:hover {
+    background: #eff6ff;
+}
+
+/* Tab Switcher */
+.tab-switcher {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    background: white;
+    padding: 6px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.tab {
+    flex: 1;
+    text-align: center;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #374151;
+    font-weight: 600;
+    font-size: 0.85rem;
+    border-radius: 8px;
+    transition: background 0.15s, color 0.15s;
+}
+
+.tab:hover {
+    background: #f3f4f6;
+}
+
+.tab.active {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: white;
+}
+
+/* Tables Grid */
+.tables-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+@media (min-width: 768px) {
+    .tables-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Chart hint */
+.chart-hint {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin: 0 0 6px 0;
+}

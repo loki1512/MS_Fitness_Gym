@@ -28,6 +28,11 @@
     <div class="header">
     <div class="greeting" id="greeting"></div>
     <div class="subtitle">Store Performance Overview</div>
+    {% if selected_date and selected_date != today_iso %}
+    <div style="margin-top:6px; font-size:0.85rem; opacity:0.9;">
+        Viewing: {{ selected_date }} &mdash; <a href="/" style="color:white; text-decoration:underline;">Back to Today</a>
+    </div>
+    {% endif %}
 </div>
 
 
@@ -59,6 +64,18 @@
     <div class="kpi-value">{{ new_customers }}</div>
 </div>
 
+<a href="/dashboard/monthly" class="kpi-card link-card tab-card">
+    <div class="kpi-label">View</div>
+    <div class="kpi-value">Monthly</div>
+</a>
+<a href="/dashboard/quarterly" class="kpi-card link-card tab-card">
+    <div class="kpi-label">View</div>
+    <div class="kpi-value">Quarterly</div>
+</a>
+<a href="/dashboard/yearly" class="kpi-card link-card tab-card">
+    <div class="kpi-label">View</div>
+    <div class="kpi-value">Yearly</div>
+</a>
 
 <a href="/billing" class="kpi-card link-card">
             <div class="kpi-label">Quick Action</div>

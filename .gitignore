@@ -16,3 +16,7 @@ Thumbs.db
 # Node / frontend build (if any)
 node_modules/
 dist/
+
+# Claude Code (local only)
+CLAUDE.md
+.claude/
