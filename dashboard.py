@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template
+from flask_security import auth_required
 from datetime import datetime, date
 from sqlalchemy import func
 from models import Bill, BillItem
@@ -8,6 +9,7 @@ from sqlalchemy import distinct, and_
 dashboard_bp = Blueprint("dashboard", __name__)
 
 @dashboard_bp.route("/")
+@auth_required()
 def daily_dashboard():
     today = date.today()
 
