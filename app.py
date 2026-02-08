@@ -61,12 +61,73 @@ def create_app():
     with app.app_context():
         db.create_all()
 
+        # Auto-migrate SQLite → PostgreSQL on first deploy
+        if db_url.startswith("postgresql"):
+            _auto_migrate_sqlite_to_pg(app)
+
         if not user_datastore.find_user(email="admin@ksa.com"):
             admin_role = user_datastore.find_or_create_role(name="admin", description="Administrator")
             user_datastore.create_user(email="admin@ksa.com", password=hash_password("admin@123"), roles=[admin_role])
             db.session.commit()
 
     return app
+
+
+def _auto_migrate_sqlite_to_pg(app):
+    """One-time auto-migration: copies data from SQLite to PostgreSQL if PG is empty and SQLite has data."""
+    import sqlite3
+
+    sqlite_path = os.path.join(app.instance_path, "db.sqlite3")
+    if not os.path.exists(sqlite_path):
+        return
+
+    # Check if PostgreSQL already has data (bills table)
+    from models import Bill
+    pg_count = Bill.query.count()
+    if pg_count > 0:
+        return  # Already migrated
+
+    # Check if SQLite has data
+    try:
+        src = sqlite3.connect(sqlite_path)
+        src.row_factory = sqlite3.Row
+        sqlite_bills = src.execute("SELECT COUNT(*) FROM bill").fetchone()[0]
+        if sqlite_bills == 0:
+            src.close()
+            return  # Nothing to migrate
+    except Exception:
+        return
+
+    # Migrate tables in order (respecting foreign keys)
+    tables = ["item", "bill", "bill_item"]
+    from sqlalchemy import text
+
+    app.logger.info(f"Auto-migrating {sqlite_bills} bills from SQLite to PostgreSQL...")
+
+    for table in tables:
+        try:
+            rows = src.execute(f"SELECT * FROM {table}").fetchall()
+        except Exception:
+            continue
+
+        if not rows:
+            continue
+
+        col_names = rows[0].keys()
+        placeholders = ", ".join(f":{c}" for c in col_names)
+        col_list = ", ".join(col_names)
+        insert_sql = text(
+            f"INSERT INTO {table} ({col_list}) VALUES ({placeholders}) ON CONFLICT DO NOTHING"
+        )
+
+        for row in rows:
+            db.session.execute(insert_sql, dict(row))
+
+        db.session.commit()
+        app.logger.info(f"  Migrated {table}: {len(rows)} rows")
+
+    src.close()
+    app.logger.info("SQLite → PostgreSQL migration complete!")
 
 
 app = create_app()
