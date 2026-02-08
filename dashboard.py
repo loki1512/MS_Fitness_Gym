@@ -97,7 +97,7 @@ def daily_dashboard():
         Bill.customer_phone,
         func.sum(Bill.final_amount).label("total_spent")
     ).filter(_date_col(Bill.timestamp) == today)\
-    .group_by(Bill.customer_phone)\
+    .group_by(Bill.customer_phone, Bill.customer_name)\
     .having(func.min(_date_col(Bill.timestamp)) == today)\
     .all()
 
@@ -107,7 +107,7 @@ def daily_dashboard():
         Bill.customer_phone,
         func.sum(Bill.final_amount).label("total_spent")
     ).filter(_date_col(Bill.timestamp) == today)\
-    .group_by(Bill.customer_phone)\
+    .group_by(Bill.customer_phone, Bill.customer_name)\
     .having(func.min(_date_col(Bill.timestamp)) < today)\
     .all()
 
@@ -154,7 +154,7 @@ def _period_dashboard_data(start_date, end_date):
         func.count(Bill.id).label("bill_count"),
         func.sum(Bill.final_amount).label("total_spent"),
     ).filter(date_filter)\
-     .group_by(Bill.customer_phone)\
+     .group_by(Bill.customer_phone, Bill.customer_name)\
      .order_by(func.count(Bill.id).desc())\
      .limit(10).all()
 
@@ -165,7 +165,7 @@ def _period_dashboard_data(start_date, end_date):
         func.count(Bill.id).label("bill_count"),
         func.sum(Bill.final_amount).label("total_spent"),
     ).filter(date_filter)\
-     .group_by(Bill.customer_phone)\
+     .group_by(Bill.customer_phone, Bill.customer_name)\
      .order_by(func.sum(Bill.final_amount).desc())\
      .limit(10).all()
 
