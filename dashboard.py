@@ -2,10 +2,28 @@ from flask import Blueprint, render_template, request
 from flask_security import auth_required
 from datetime import datetime, date, timedelta
 from calendar import monthrange
-from sqlalchemy import func
+from sqlalchemy import func, cast, Date
 from models import Bill, BillItem
 from extensions import db
 from sqlalchemy import distinct, and_
+
+
+def _is_postgres():
+    return "postgresql" in str(db.engine.url)
+
+
+def _date_col(col):
+    """Cross-DB date extraction."""
+    if _is_postgres():
+        return cast(col, Date)
+    return func.date(col)
+
+
+def _hour_col(col):
+    """Cross-DB hour extraction as string."""
+    if _is_postgres():
+        return func.to_char(col, 'HH24')
+    return func.strftime('%H', col)
 
 dashboard_bp = Blueprint("dashboard", __name__)
 
@@ -20,11 +38,11 @@ def daily_dashboard():
 
     # Total Sales Today
     total_sales = db.session.query(func.sum(Bill.final_amount))\
-        .filter(func.date(Bill.timestamp) == today).scalar() or 0
+        .filter(_date_col(Bill.timestamp) == today).scalar() or 0
 
     # Total Bills
     total_bills = db.session.query(func.count(Bill.id))\
-        .filter(func.date(Bill.timestamp) == today).scalar() or 0
+        .filter(_date_col(Bill.timestamp) == today).scalar() or 0
 
     # Average Bill Value
     avg_bill = round(total_sales / total_bills, 2) if total_bills else 0
@@ -32,13 +50,13 @@ def daily_dashboard():
     # Units Sold
     total_units = db.session.query(func.sum(BillItem.qty))\
         .join(Bill, Bill.id == BillItem.bill_id)\
-        .filter(func.date(Bill.timestamp) == today).scalar() or 0
+        .filter(_date_col(Bill.timestamp) == today).scalar() or 0
 
     # Hourly Sales
     hourly = db.session.query(
-        func.strftime('%H', Bill.timestamp).label("hour"),
+        _hour_col(Bill.timestamp).label("hour"),
         func.sum(Bill.final_amount)
-    ).filter(func.date(Bill.timestamp) == today)\
+    ).filter(_date_col(Bill.timestamp) == today)\
      .group_by("hour").order_by("hour").all()
 
     hours = [h[0] for h in hourly]
@@ -50,7 +68,7 @@ def daily_dashboard():
         func.sum(BillItem.qty).label("qty"),
         func.sum(BillItem.final_item_amount).label("amount")
     ).join(Bill)\
-     .filter(func.date(Bill.timestamp) == today)\
+     .filter(_date_col(Bill.timestamp) == today)\
      .group_by(BillItem.item_name)\
      .order_by(func.sum(BillItem.final_item_amount).desc())\
      .limit(10).all()
@@ -58,13 +76,13 @@ def daily_dashboard():
 
     # Total customers today
     total_customers = db.session.query(func.count(distinct(Bill.customer_phone)))\
-        .filter(func.date(Bill.timestamp) == today)\
+        .filter(_date_col(Bill.timestamp) == today)\
         .scalar() or 0
 
     # New vs Repeat (simple logic: first time seen = new)
     subquery = db.session.query(
         Bill.customer_phone,
-        func.min(func.date(Bill.timestamp)).label("first_visit")
+        func.min(_date_col(Bill.timestamp)).label("first_visit")
     ).group_by(Bill.customer_phone).subquery()
 
     new_customers = db.session.query(func.count())\
@@ -78,9 +96,9 @@ def daily_dashboard():
         Bill.customer_name,
         Bill.customer_phone,
         func.sum(Bill.final_amount).label("total_spent")
-    ).filter(func.date(Bill.timestamp) == today)\
+    ).filter(_date_col(Bill.timestamp) == today)\
     .group_by(Bill.customer_phone)\
-    .having(func.min(func.date(Bill.timestamp)) == today)\
+    .having(func.min(_date_col(Bill.timestamp)) == today)\
     .all()
 
     # Repeat customers today (details)
@@ -88,9 +106,9 @@ def daily_dashboard():
         Bill.customer_name,
         Bill.customer_phone,
         func.sum(Bill.final_amount).label("total_spent")
-    ).filter(func.date(Bill.timestamp) == today)\
+    ).filter(_date_col(Bill.timestamp) == today)\
     .group_by(Bill.customer_phone)\
-    .having(func.min(func.date(Bill.timestamp)) < today)\
+    .having(func.min(_date_col(Bill.timestamp)) < today)\
     .all()
 
     
@@ -115,8 +133,8 @@ def daily_dashboard():
 # ---- Helper: period dashboard data ----
 def _period_dashboard_data(start_date, end_date):
     date_filter = and_(
-        func.date(Bill.timestamp) >= start_date,
-        func.date(Bill.timestamp) <= end_date,
+        _date_col(Bill.timestamp) >= start_date,
+        _date_col(Bill.timestamp) <= end_date,
     )
 
     # KPIs
@@ -175,11 +193,11 @@ def _period_dashboard_data(start_date, end_date):
 
     # Day-wise sales for line chart
     daily_sales = db.session.query(
-        func.date(Bill.timestamp).label("day"),
+        _date_col(Bill.timestamp).label("day"),
         func.sum(Bill.final_amount).label("sales"),
     ).filter(date_filter)\
-     .group_by(func.date(Bill.timestamp))\
-     .order_by(func.date(Bill.timestamp)).all()
+     .group_by(_date_col(Bill.timestamp))\
+     .order_by(_date_col(Bill.timestamp)).all()
 
     days = [str(d.day) for d in daily_sales]
     day_sales = [float(d.sales) for d in daily_sales]
