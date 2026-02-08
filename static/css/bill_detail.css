@@ -163,18 +163,54 @@ button:hover {
 }
 
 /* ===== Mobile ===== */
-@media (max-width: 640px) {
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+
   .invoice {
     max-width: 100%;
-    padding: 16px;
+    padding: 14px;
+    margin: 0 auto 12px;
+  }
+
+  header h1 {
+    font-size: 1.1rem;
+  }
+
+  header h2 {
+    font-size: 1.15rem;
+  }
+
+  header p {
+    font-size: 0.85rem;
   }
 
   .items {
     font-size: 0.85rem;
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
-  header h2 {
-    font-size: 1.3rem;
+  .items th,
+  .items td {
+    padding: 8px 6px;
+    white-space: nowrap;
+  }
+
+  .totals {
+    font-size: 0.9rem;
+  }
+
+  .totals .final {
+    font-size: 1.05rem;
+  }
+
+  button {
+    min-height: 44px;
+    font-size: 0.95rem;
+    padding: 12px;
   }
 }
 

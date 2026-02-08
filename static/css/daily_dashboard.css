@@ -152,28 +152,57 @@
 
   .header-nav {
     display: flex;
-    gap: 12px;
-  }
-
-  .filters-card {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .date-filters {
-    flex-direction: column;
-  }
-
-  .page-header {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-wrap: wrap;
     gap: 6px;
   }
 
-  .bills-table th,
-  .bills-table td {
-    font-size: 0.8rem;
+  .header-nav a {
+    margin-left: 0;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 6px;
+    font-size: 0.9rem;
+  }
+
+  .container {
     padding: 8px;
+  }
+
+  .header {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .greeting {
+    font-size: 1.1rem;
+  }
+
+  .kpi-grid {
+    gap: 8px;
+  }
+
+  .kpi-card {
+    padding: 10px;
+  }
+
+  .kpi-value {
+    font-size: 1.05rem;
+  }
+
+  .link-card {
+    min-height: 44px;
+  }
+
+  table {
+    font-size: 0.82rem;
+  }
+
+  th, td {
+    padding: 6px 4px;
+  }
+
+  .chart-container {
+    height: 180px;
   }
 }
 .link-card {

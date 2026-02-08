@@ -79,3 +79,43 @@
     color: #9ca3af;
     margin: 0 0 6px 0;
 }
+
+/* ===== Mobile ===== */
+@media (max-width: 600px) {
+    .period-nav {
+        gap: 8px;
+    }
+
+    .period-title {
+        font-size: 1.1rem;
+        text-align: center;
+    }
+
+    .period-btn {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+
+    .tab-switcher {
+        gap: 4px;
+        padding: 4px;
+    }
+
+    .tab {
+        padding: 8px 6px;
+        font-size: 0.8rem;
+    }
+
+    .tables-grid .card table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .chart-hint {
+        font-size: 0.8rem;
+    }
+}

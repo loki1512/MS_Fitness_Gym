@@ -71,6 +71,7 @@
         <!-- Top Customers by Number of Bills -->
         <div class="card">
             <h3>Top Customers by Bills</h3>
+            <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
             <table>
                 <tr><th>Customer</th><th>Phone</th><th>Bills</th><th>Revenue</th></tr>
                 {% for c in top_customers_by_count %}
@@ -82,11 +83,13 @@
                 </tr>
                 {% endfor %}
             </table>
+            </div>
         </div>
 
         <!-- Top Customers by Revenue -->
         <div class="card">
             <h3>Top Customers by Revenue</h3>
+            <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
             <table>
                 <tr><th>Customer</th><th>Phone</th><th>Bills</th><th>Revenue</th></tr>
                 {% for c in top_customers_by_revenue %}
@@ -98,11 +101,13 @@
                 </tr>
                 {% endfor %}
             </table>
+            </div>
         </div>
 
         <!-- Top Products by Quantity -->
         <div class="card">
             <h3>Top Products by Quantity</h3>
+            <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
             <table>
                 <tr><th>Product</th><th>Qty Sold</th><th>Revenue</th></tr>
                 {% for p in top_products_by_qty %}
@@ -113,11 +118,13 @@
                 </tr>
                 {% endfor %}
             </table>
+            </div>
         </div>
 
         <!-- Top Products by Revenue -->
         <div class="card">
             <h3>Top Products by Revenue</h3>
+            <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
             <table>
                 <tr><th>Product</th><th>Qty Sold</th><th>Revenue</th></tr>
                 {% for p in top_products_by_revenue %}
@@ -128,6 +135,7 @@
                 </tr>
                 {% endfor %}
             </table>
+            </div>
         </div>
     </div>
 </div>

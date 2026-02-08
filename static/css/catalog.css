@@ -204,24 +204,6 @@ td button:hover {
   background: #1e4fd6;
 }
 
-/* ===== Mobile Optimization ===== */
-@media (max-width: 600px) {
-  table {
-    min-width: 100%;
-    border-radius: 0;
-  }
-
-  th, td {
-    padding: 10px 8px;
-    font-size: 0.8rem;
-  }
-
-  td button {
-    padding: 6px 10px;
-    font-size: 0.75rem;
-  }
-}
-
 /* ===== Import Section ===== */
 .import-row {
   display: grid;
@@ -236,22 +218,12 @@ td button:hover {
   font-size: 0.9rem;
 }
 
-/* ===== Responsive ===== */
+/* ===== Mobile ===== */
 @media (max-width: 600px) {
-  .add-row {
-    grid-template-columns: 1fr;
+  body {
+    padding: 10px;
   }
 
-  .import-row {
-    grid-template-columns: 1fr;
-  }
-  .row {
-    flex-direction: column;
-  }
-
-  table {
-    font-size: 0.8rem;
-  }
   .site-header {
     flex-direction: column;
     align-items: flex-start;
@@ -261,13 +233,40 @@ td button:hover {
   .header-nav {
     width: 100%;
     display: flex;
-    gap: 12px;
+    flex-wrap: wrap;
+    gap: 6px;
   }
 
   .header-nav a {
     margin-left: 0;
+    padding: 8px 12px;
+    background: #f3f4f6;
+    border-radius: 6px;
+    font-size: 0.9rem;
+  }
+
+  table {
+    min-width: 480px;
+    font-size: 0.85rem;
+    border-radius: 0;
+  }
+
+  th, td {
+    padding: 10px 8px;
+  }
+
+  td button {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    min-height: 36px;
+  }
+
+  .add-row {
+    grid-template-columns: 1fr;
+  }
+
+  .import-row {
+    grid-template-columns: 1fr;
   }
 }
 
-
-  
