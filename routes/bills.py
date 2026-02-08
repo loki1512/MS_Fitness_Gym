@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_security import auth_required
 from extensions import db
 from models import Bill, BillItem
 from datetime import datetime
@@ -9,6 +10,7 @@ bills_bp = Blueprint("bills", __name__)
 # CREATE BILL (EXISTING - UNCHANGED)
 # -----------------------------
 @bills_bp.route("/api/bills", methods=["POST"])
+@auth_required()
 def save_bill():
     data = request.get_json(force=True)
 
@@ -57,6 +59,7 @@ def save_bill():
 # LIST BILLS (NEW)
 # -----------------------------
 @bills_bp.route("/api/bills", methods=["GET"])
+@auth_required()
 def list_bills():
     bills = (
         Bill.query
@@ -79,6 +82,7 @@ def list_bills():
 # BILL DETAILS (NEW)
 # -----------------------------
 @bills_bp.route("/api/bills/<int:bill_id>", methods=["GET"])
+@auth_required()
 def get_bill(bill_id):
     bill = Bill.query.get_or_404(bill_id)
 

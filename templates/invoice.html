@@ -2,56 +2,48 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Bill #{{ bill.id }}</title>
+  <title>Invoice #{{ bill.id }} | Kumara Swami Agencies</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="/static/css/bill_detail.css">
-
-  <!-- PRINT STYLES (ADDED) -->
   <style>
     @media print {
-      body * {
-        visibility: hidden;
-      }
-
-      #bill-print-area,
-      #bill-print-area * {
-        visibility: visible;
-      }
-
-      #bill-print-area {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-      }
-
-      button {
-        display: none;
-      }
+      body * { visibility: hidden; }
+      #bill-print-area, #bill-print-area * { visibility: visible; }
+      #bill-print-area { position: absolute; left: 0; top: 0; width: 100%; }
+      .no-print { display: none; }
     }
+    .no-print {
+      text-align: center;
+      padding: 12px;
+    }
+    .no-print button {
+      padding: 10px 24px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .no-print button:hover { background: #1d4ed8; }
   </style>
 </head>
-
 <body>
 
-<!-- PRINTABLE AREA START -->
 <div id="bill-print-area">
-
   <div class="invoice">
-
     <header style="text-align:center; margin-bottom:15px;">
-  <h1 style="margin:0;">Kumara Swami Agencies</h1>
-  <p style="margin:2px 0;">
-    Near SBI ATM, Ravindra Nagar<br>
-    Galiveedu – 516267
-  </p>
-  <p style="margin:2px 0;">📞 9490608943</p>
-
-  <hr style="margin:10px 0;">
-
-  <h2 style="margin:5px 0;">Invoice</h2>
-  <p style="margin:2px 0;">Bill #{{ bill.id }}</p>
-  <p style="margin:2px 0;">{{ bill.timestamp.strftime('%d %b %Y %H:%M') }}</p>
-</header>
+      <h1 style="margin:0;">Kumara Swami Agencies</h1>
+      <p style="margin:2px 0;">
+        Near SBI ATM, Ravindra Nagar<br>
+        Galiveedu - 516267
+      </p>
+      <p style="margin:2px 0;">Phone: 9490608943</p>
+      <hr style="margin:10px 0;">
+      <h2 style="margin:5px 0;">Invoice</h2>
+      <p style="margin:2px 0;">Bill #{{ bill.id }}</p>
+      <p style="margin:2px 0;">{{ bill.timestamp.strftime('%d %b %Y %H:%M') }}</p>
+    </header>
 
     <section class="customer">
       <strong>Customer:</strong>
@@ -80,16 +72,13 @@
         <tr>
           <td>{{ i.item_name }}</td>
           <td>{{ i.qty }}</td>
-
           {% set discount_value = i.item_discount_value or 0 %}
           {% set discount =
             discount_value
             if i.item_discount_type == '₹'
             else (i.unit_price * discount_value / 100)
           %}
-
           <td>₹{{ "%.2f"|format(i.unit_price + discount) }}</td>
-
           <td>
             {% if i.item_discount_type == '₹' %}
               ₹{{ "%.2f"|format(i.item_discount_value) }}
@@ -99,7 +88,6 @@
               -
             {% endif %}
           </td>
-
           <td>₹{{ "%.2f"|format(i.unit_price) }}</td>
           <td>₹{{ "%.2f"|format(i.final_item_amount) }}</td>
         </tr>
@@ -114,57 +102,12 @@
       {% endif %}
       <p class="final">Final: ₹{{ "%.2f"|format(bill.final_amount) }}</p>
     </section>
-
   </div>
-
 </div>
-<!-- PRINTABLE AREA END -->
 
-<!-- EXISTING BUTTON -->
-<button onclick="sendWhatsApp()">
-  📲 Send Bill on WhatsApp
-</button>
-
-<!-- NEW PRINT BUTTON (ADDED) -->
-<button onclick="printBill()">
-  🖨️ Print Bill
-</button>
+<div class="no-print">
+  <button onclick="window.print()">Print Invoice</button>
+</div>
 
 </body>
-
-<script>
-  function sendWhatsApp() {
-    const phone = "{{ bill.customer_phone }}";
-    console.log("phone:", phone);
-
-    if (!phone) {
-      alert("Customer phone number is not available.");
-      return;
-    }
-    if (phone.length < 10) {
-      alert("Invalid phone number.");
-      return;
-    }
-
-    const bill_link = "https://ksa-2-0.onrender.com/invoice/{{ bill.id }}";
-
-    const message = encodeURIComponent(
-      ` *KS Agencies*\n\n` +
-      `Hello *{{ bill.customer_name or 'Customer' }}*,\n\n` +
-      `Thank you for shopping with us.\n` +
-      `Your bill amount is *₹{{ "%.2f"|format(bill.final_amount) }}*.\n\n` +
-      `View your bill here:\n${bill_link}\n\n` +
-      `Thank you for your business !`
-    );
-
-    const url = `https://wa.me/91${phone}?text=${message}`;
-    window.open(url, '_blank');
-  }
-
-  /* PRINT FUNCTION (ADDED) */
-  function printBill() {
-    window.print();
-  }
-</script>
-
 </html>

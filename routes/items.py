@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_security import auth_required
 from extensions import db
 from models import Item
 from sqlalchemy import func, and_
@@ -7,6 +8,7 @@ import pandas as pd
 items_bp = Blueprint("items", __name__)
 
 @items_bp.route("/api/items/search")
+@auth_required()
 def search_items():
     q = request.args.get("q", "").strip()
     if not q:
@@ -37,6 +39,7 @@ def search_items():
 
 
 @items_bp.route("/api/items", methods=["GET"])
+@auth_required()
 def get_items():
     items = Item.query.order_by(Item.name).all()
     return jsonify([
@@ -46,6 +49,7 @@ def get_items():
 
 
 @items_bp.route("/api/items", methods=["POST"])
+@auth_required()
 def add_item():
     data = request.json
     name = data.get("name", "").strip()
@@ -65,6 +69,7 @@ def add_item():
 
 
 @items_bp.route("/api/items/<int:item_id>", methods=["PUT"])
+@auth_required()
 def update_item(item_id):
     item = Item.query.get_or_404(item_id)
     data = request.json
@@ -83,6 +88,7 @@ def update_item(item_id):
 
 
 @items_bp.route("/api/items/<int:item_id>", methods=["DELETE"])
+@auth_required()
 def delete_item(item_id):
     item = Item.query.get_or_404(item_id)
     db.session.delete(item)
@@ -91,6 +97,7 @@ def delete_item(item_id):
 
 
 @items_bp.route("/api/items/import", methods=["POST"])
+@auth_required()
 def import_items():
     file = request.files.get("file")
     if not file:
