@@ -166,7 +166,7 @@ export default {
 
     const fetchCurrentUser = async (token) => {
       try {
-        const response = await fetch('/api/me', {
+        const response = await fetch('${this.$apiUrl}/api/me', {
           headers: {
             'Authentication-Token': token
           },

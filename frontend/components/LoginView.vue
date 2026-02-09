@@ -177,6 +177,7 @@ export default {
     const handleLogin = async () => {
       loading.value = true;
       error.value = '';
+      credentials: 'include';
 
       try {
         const response = await fetch('/api/login', {
