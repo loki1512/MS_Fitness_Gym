@@ -1,11 +1,12 @@
 services:
-  # Backend API Service (Stays under 'services')
+  # Backend (Python API)
   - type: web
     name: ms-power-fitness-api
-    rootDir: backend  # Ensure this points to your python folder
+    rootDir: backend
     runtime: python
     plan: free
-    buildCommand: chmod +x build.sh && ./build.sh
+    # Changed to standard build command to avoid "file not found" errors
+    buildCommand: pip install -r requirements.txt
     startCommand: gunicorn -w 4 -b 0.0.0.0:$PORT app:app
     envVars:
       - key: PYTHON_VERSION
@@ -21,21 +22,27 @@ services:
     healthCheckPath: /api/health
 
 databases:
+  # Postgres Database
   - name: ms-power-fitness-db
     plan: free
     databaseName: ms_power_fitness
     user: ms_power_user
 
-# Frontend moved to its own top-level section
 staticSites:
+  # Frontend (Vite/React)
   - name: ms-power-fitness-frontend
-    rootDir: frontend  # Ensure this points to your vite folder
+    rootDir: frontend
     plan: free
     buildCommand: npm install && npm run build
-    publishPath: dist  # Note: key is 'publishPath', not 'staticPublishPath'
+    publishPath: dist
     envVars:
       - key: NODE_VERSION
         value: 18.17.0
+    routes:
+      # Redirect /api requests to the backend
+      - type: rewrite
+        source: /api/*
+        destination: https://ms-power-fitness-api.onrender.com/api/*
     headers:
       - path: /*
         name: X-Frame-Options
@@ -43,7 +50,3 @@ staticSites:
       - path: /*
         name: X-Content-Type-Options
         value: nosniff
-    routes:
-      - type: rewrite
-        source: /api/*
-        destination: https://ms-power-fitness-api.onrender.com/api/*
