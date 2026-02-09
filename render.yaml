@@ -1,11 +1,11 @@
 services:
-  # Backend (Python API)
+  # Backend API Service
   - type: web
     name: ms-power-fitness-api
     rootDir: backend
     runtime: python
     plan: free
-    # Changed to standard build command to avoid "file not found" errors
+    # Standard build command
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn -w 4 -b 0.0.0.0:$PORT app:app
     envVars:
@@ -21,28 +21,17 @@ services:
           property: connectionString
     healthCheckPath: /api/health
 
-databases:
-  # Postgres Database
-  - name: ms-power-fitness-db
-    plan: free
-    databaseName: ms_power_fitness
-    user: ms_power_user
-
-staticSites:
-  # Frontend (Vite/React)
-  - name: ms-power-fitness-frontend
+  # Frontend Static Site
+  - type: web
+    name: ms-power-fitness-frontend
     rootDir: frontend
-    plan: free
+    runtime: static
+    # plan: free  <-- REMOVED (Static sites are free by default; specifying this causes errors)
     buildCommand: npm install && npm run build
-    publishPath: dist
+    staticPublishPath: ./dist
     envVars:
       - key: NODE_VERSION
         value: 18.17.0
-    routes:
-      # Redirect /api requests to the backend
-      - type: rewrite
-        source: /api/*
-        destination: https://ms-power-fitness-api.onrender.com/api/*
     headers:
       - path: /*
         name: X-Frame-Options
@@ -50,3 +39,13 @@ staticSites:
       - path: /*
         name: X-Content-Type-Options
         value: nosniff
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://ms-power-fitness-api.onrender.com/api/*
+
+databases:
+  - name: ms-power-fitness-db
+    plan: free
+    databaseName: ms_power_fitness
+    user: ms_power_user
