@@ -20,7 +20,7 @@ services:
     healthCheckPath: /api/health
 
   # Frontend Static Site
-  - type: web
+  - type: static
     name: ms-power-fitness-frontend
     runtime: static
     plan: free
