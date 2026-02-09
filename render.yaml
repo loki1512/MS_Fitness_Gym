@@ -2,11 +2,9 @@ services:
   # Backend API Service
   - type: web
     name: ms-power-fitness-api
-    rootDir: backend
     runtime: python
     plan: free
-    # Standard build command
-    buildCommand: pip install -r requirements.txt
+    buildCommand: chmod +x build.sh && ./build.sh
     startCommand: gunicorn -w 4 -b 0.0.0.0:$PORT app:app
     envVars:
       - key: PYTHON_VERSION
@@ -24,9 +22,8 @@ services:
   # Frontend Static Site
   - type: web
     name: ms-power-fitness-frontend
-    rootDir: frontend
     runtime: static
-    # plan: free  <-- REMOVED (Static sites are free by default; specifying this causes errors)
+    plan: free
     buildCommand: npm install && npm run build
     staticPublishPath: ./dist
     envVars:
