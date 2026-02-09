@@ -1,7 +1,8 @@
 services:
-  # Backend API Service
+  # Backend API Service (Stays under 'services')
   - type: web
     name: ms-power-fitness-api
+    rootDir: backend  # Ensure this points to your python folder
     runtime: python
     plan: free
     buildCommand: chmod +x build.sh && ./build.sh
@@ -19,13 +20,19 @@ services:
           property: connectionString
     healthCheckPath: /api/health
 
-  # Frontend Static Site
-  - type: static
-    name: ms-power-fitness-frontend
-    runtime: static
+databases:
+  - name: ms-power-fitness-db
+    plan: free
+    databaseName: ms_power_fitness
+    user: ms_power_user
+
+# Frontend moved to its own top-level section
+staticSites:
+  - name: ms-power-fitness-frontend
+    rootDir: frontend  # Ensure this points to your vite folder
     plan: free
     buildCommand: npm install && npm run build
-    staticPublishPath: ./dist
+    publishPath: dist  # Note: key is 'publishPath', not 'staticPublishPath'
     envVars:
       - key: NODE_VERSION
         value: 18.17.0
@@ -40,7 +47,6 @@ services:
       - type: rewrite
         source: /api/*
         destination: https://ms-power-fitness-api.onrender.com/api/*
-
 databases:
   - name: ms-power-fitness-db
     plan: free
