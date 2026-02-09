@@ -47,8 +47,3 @@ staticSites:
       - type: rewrite
         source: /api/*
         destination: https://ms-power-fitness-api.onrender.com/api/*
-databases:
-  - name: ms-power-fitness-db
-    plan: free
-    databaseName: ms_power_fitness
-    user: ms_power_user
