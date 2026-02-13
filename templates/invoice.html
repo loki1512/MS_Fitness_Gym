@@ -78,7 +78,7 @@
             if i.item_discount_type == '₹'
             else (i.unit_price * discount_value / 100)
           %}
-          <td>₹{{ "%.2f"|format(i.unit_price + discount) }}</td>
+          <td>₹{{ "%.2f"|format(i.unit_price) }}</td>
           <td>
             {% if i.item_discount_type == '₹' %}
               ₹{{ "%.2f"|format(i.item_discount_value) }}
@@ -88,7 +88,7 @@
               -
             {% endif %}
           </td>
-          <td>₹{{ "%.2f"|format(i.unit_price) }}</td>
+          <td>₹{{ "%.2f"|format(i.unit_price - discount) }}</td>
           <td>₹{{ "%.2f"|format(i.final_item_amount) }}</td>
         </tr>
         {% endfor %}

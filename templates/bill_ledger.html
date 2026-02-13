@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bill Ledger - {{ bill.id }}</title>
+    <style>
+        table { width:100%; border-collapse: collapse; }
+        th, td { padding:8px; border:1px solid #ccc; text-align:center; }
+        th { background:#f5f5f5; }
+        .sale { color:green; font-weight:bold; }
+        .return { color:red; font-weight:bold; }
+        .total-row { font-weight:bold; background:#fafafa; }
+        .actions { margin:15px 0; }
+    </style>
+</head>
+<body>
+
+<h2>Ledger for Bill #{{ bill.id }}</h2>
+<p>
+    Customer: {{ bill.customer_name }} |
+    Phone: {{ bill.customer_phone }} |
+    Date: {{ bill.timestamp.strftime("%d-%m-%Y %I:%M %p") }}
+</p>
+
+<div class="actions">
+    <a href="/bills/{{ bill.id }}/add-sale">➕ Add Sale</a> |
+    <a href="/bills/{{ bill.id }}/add-return">↩ Add Return</a> |
+    <a href="/bills/{{ bill.id }}">🧾 View Net Bill</a>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Date & Time</th>
+            <th>Type</th>
+            <th>Item</th>
+            <th>Qty</th>
+            <th>Rate</th>
+            <th>Amount</th>
+            <th>Running Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% set running = 0 %}
+        {% for tx, group in rows %}
+            {% if tx.type == 'SALE' %}
+                {% set signed_qty = tx.qty %}
+                {% set line_total = tx.qty * tx.unit_price %}
+            {% else %}
+                {% set signed_qty = -tx.qty %}
+                {% set line_total = -tx.qty * tx.unit_price %}
+            {% endif %}
+
+            {% set running = running + line_total %}
+
+            <tr>
+                <td>{{ tx.created_at.strftime("%d-%m-%Y %I:%M %p") }}</td>
+                <td class="{{ 'sale' if tx.type=='SALE' else 'return' }}">{{ tx.type }}</td>
+                <td>{{ tx.item_name }}</td>
+                <td>{{ signed_qty }}</td>
+                <td>{{ "%.2f"|format(tx.unit_price) }}</td>
+                <td>{{ "%.2f"|format(line_total) }}</td>
+                <td>{{ "%.2f"|format(running) }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Current Net Total: ₹ {{ "%.2f"|format(running) }}</h3>
+
+</body>
+</html>

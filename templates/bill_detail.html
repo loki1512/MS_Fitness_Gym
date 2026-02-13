@@ -101,7 +101,7 @@
             {% endif %}
           </td>
 
-          <td>₹{{ "%.2f"|format(i.unit_price) }}</td>
+          <td>₹{{ "%.2f"|format(i.unit_price - discount) }}</td>
           <td>₹{{ "%.2f"|format(i.final_item_amount) }}</td>
         </tr>
         {% endfor %}
