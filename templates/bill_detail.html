@@ -89,7 +89,7 @@
             else (i.unit_price * discount_value / 100)
           %}
 
-          <td>₹{{ "%.2f"|format(i.unit_price + discount) }}</td>
+          <td>₹{{ "%.2f"|format(i.unit_price) }}</td>
 
           <td>
             {% if i.item_discount_type == '₹' %}
