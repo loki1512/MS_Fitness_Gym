@@ -3,6 +3,8 @@ from flask_security import auth_required
 from extensions import db
 from models import Bill, BillItem
 from datetime import datetime
+from zoneinfo import ZoneInfo
+
 
 bills_bp = Blueprint("bills", __name__)
 
@@ -25,8 +27,8 @@ def save_bill():
         customer_name=data.get("customer_name"),
         customer_phone=data.get("customer_phone"),
         customer_address=data.get("customer_address"),
-
-        timestamp=datetime.utcnow()
+        #timestamp in india standard time
+        timestamp = datetime.now(ZoneInfo("Asia/Kolkata"))
     )
 
     db.session.add(bill)
