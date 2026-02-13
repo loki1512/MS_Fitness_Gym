@@ -15,6 +15,7 @@ export function addItemFromForm() {
 
   if (state.discountEnabled) {
     dtype = dom.itemDiscountType.value;
+    console.log("dtype:", dtype);
     dval = parseFloat(dom.itemDiscountValue.value || 0);
   }
 
