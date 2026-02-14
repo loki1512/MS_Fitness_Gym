@@ -2,6 +2,7 @@ import os
 from flask import Flask, request, jsonify, redirect, url_for
 from extensions import db
 from flask_security import Security, SQLAlchemyUserDatastore, hash_password
+from flask_migrate import Migrate
 
 def create_app():
     app = Flask(__name__)
@@ -69,7 +70,7 @@ def create_app():
             admin_role = user_datastore.find_or_create_role(name="admin", description="Administrator")
             user_datastore.create_user(email="admin@ksa.com", password=hash_password("admin@123"), roles=[admin_role])
             db.session.commit()
-
+    migrate = Migrate(app, db)
     return app
 
 
@@ -131,6 +132,8 @@ def _auto_migrate_sqlite_to_pg(app):
 
 
 app = create_app()
+
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
