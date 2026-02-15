@@ -131,6 +131,13 @@
   🖨️ Print Bill
 </button>
 
+<button onclick="window.location='/bills'">
+  🔙 Back to Bills
+</button>
+<button onclick="deleteBill({{ bill.id }})" style="background-color:#e74c3c; color:white;">
+  🗑️ Delete Bill
+</button>
+
 </body>
 
 <script>
@@ -165,6 +172,26 @@
   /* PRINT FUNCTION (ADDED) */
   function printBill() {
     window.print();
+  }
+
+  function deleteBill(billId) {
+    if (confirm("Are you sure you want to delete this bill? This action cannot be undone.")) {
+      fetch(`/api/bills/${billId}`, {
+        method: 'DELETE'
+      })
+      .then(response => {
+        if (response.ok) {
+          alert("Bill deleted successfully.");
+          window.location.href = '/bills';
+        } else {
+          alert("Failed to delete the bill.");
+        }
+      })
+      .catch(error => {
+        console.error("Error deleting bill:", error);
+        alert("An error occurred while deleting the bill.");
+      });
+    }
   }
 </script>
 

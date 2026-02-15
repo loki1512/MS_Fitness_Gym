@@ -50,7 +50,7 @@ class BillItem(db.Model):
     item_name = db.Column(db.String(200), nullable=False)
     qty = db.Column(db.Float, nullable=False)
     unit_price = db.Column(db.Float, nullable=False)
-    physical_units = db.Column(db.Enum('pcs', 'kg', 'liter', 'meter'), default='pcs')
+    # physical_units = db.Column(db.Enum('pcs', 'kg', 'grams', 'meters'), default='pcs')
     item_discount_type = db.Column(db.String(10))
     item_discount_value = db.Column(db.Float)
     final_item_amount = db.Column(db.Float, nullable=False)

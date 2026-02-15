@@ -121,3 +121,15 @@ def get_bill(bill_id):
             for i in items
         ]
     })
+    
+@bills_bp.route("/api/bills/<int:bill_id>", methods=["DELETE"])
+@auth_required()
+def delete_bill(bill_id):
+    bill = Bill.query.get_or_404(bill_id)
+
+    # Delete associated items first
+    BillItem.query.filter_by(bill_id=bill.id).delete()
+    db.session.delete(bill)
+    db.session.commit()
+
+    return jsonify({"message": "Bill deleted successfully"})

@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify, redirect, url_for
 from extensions import db
 from flask_security import Security, SQLAlchemyUserDatastore, hash_password
 from flask_migrate import Migrate
+from sqlalchemy import inspect
 
 def create_app():
     app = Flask(__name__)
@@ -60,7 +61,14 @@ def create_app():
 
     # ---- Create tables & seed admin ----
     with app.app_context():
-        db.create_all()
+        inspector = inspect(db.engine)
+
+        # if no tables exist → first run
+        if not inspector.get_table_names():
+            print("No tables found — initializing database...")
+            db.create_all()
+        else:
+            print("Database already initialized — skipping create_all()")
 
         # Auto-migrate SQLite → PostgreSQL on first deploy
         if db_url.startswith("postgresql"):
@@ -70,7 +78,7 @@ def create_app():
             admin_role = user_datastore.find_or_create_role(name="admin", description="Administrator")
             user_datastore.create_user(email="admin@ksa.com", password=hash_password("admin@123"), roles=[admin_role])
             db.session.commit()
-    migrate = Migrate(app, db)
+        
     return app
 
 
