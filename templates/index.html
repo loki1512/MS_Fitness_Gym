@@ -1,147 +1,327 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <title>Kumara Swami Agencies | Billing</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/index.css">
 </head>
-
 <body>
+
+  <!-- SITE HEADER -->
   <header class="site-header">
-  <div class="header-left">
-    <h1>Kumara Swami Agencies</h1>
-    <span class="header-sub">Smart billing system</span>
-  </div>
-
-  <nav class="header-nav">
-    <a href="/">Dashboard</a>
-    <a href="/catalog">Catalog</a>
-    <a href="/bills">Bills</a>
-    <a href="/logout" style="color:#dc2626;">Logout</a>
-  </nav>
-</header>
-
-  <!-- Customer Details -->
-<div class="customer-section">
-  <div class="customer-header">
-  <label for="toggleCustomer">
-    <input type="checkbox" id="toggleCustomer">
-    <span>Add Customer Details</span>
-  </label>
-</div>
-  <div id="customerFields" style="display:none; margin-top:8px;">
-    <input
-      type="text"
-      id="customerName"
-      placeholder="Customer Name"
-    />
-
-    <input
-      type="text"
-      id="customerPhone"
-      placeholder="Phone Number"
-    />
-
-    <textarea
-      id="customerAddress"
-      placeholder="Address"
-      rows="2"
-    ></textarea>
-  </div>
-</div>
-
-  <h3>Billing</h3>
-  
-  <!-- ITEM ENTRY -->
-<div class="item-entry">
-  <div>
-    <input id="itemName" placeholder="Item name" autofocus />
-    <div id="suggestions"
-     style="border:1px solid #ccc; display:none; position:relative; background:#fff;">
+    <div class="header-left">
+      <div class="logo-mark">KSA</div>
+      <div>
+        <h1>Kumara Swami Agencies</h1>
+        <span class="header-sub">Smart Billing System</span>
+      </div>
     </div>
+    <nav class="header-nav">
+      <a href="/">Dashboard</a>
+      <a href="/catalog">Catalog</a>
+      <a href="/bills" class="active">Bills</a>
+      <a href="/logout" class="nav-logout">Logout</a>
+    </nav>
+  </header>
 
-    <div class="row">
-      <input id="qty" type="number" min="1" value="1" />
-      <input id="price" type="number" min="0" placeholder="Price ₹" />
-    </div>
+  <main class="container">
 
-    <button id="discountToggleBtn" onclick="toggleDiscount()">
-  Add item discount
-</button>
-
-
-    <div id="discountBox" style="display:none;">
-      <div class="row">
-        <select id="itemDiscountType">
-          <option value="%">%</option>
-          <option value="₹">₹</option>
-        </select>
-        <input id="itemDiscountValue" type="number" min="0" placeholder="Discount" />
+    <!-- STEP INDICATOR -->
+    <div class="step-bar" id="stepBar">
+      <div class="step active" data-step="1">
+        <span class="step-dot">1</span>
+        <span class="step-label">Add Items</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" data-step="2">
+        <span class="step-dot">2</span>
+        <span class="step-label">Finalise</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step" data-step="3">
+        <span class="step-dot">3</span>
+        <span class="step-label">Save</span>
       </div>
     </div>
 
-    <button id="addItemBtn" onclick="addItem()">+ Add Item</button>
+    <!-- ===================== STEP 1: ITEM ENTRY ===================== -->
+    <div id="step1">
 
+      <!-- CUSTOMER SECTION -->
+      <div class="card customer-card">
+        <div class="customer-toggle" id="customerToggle">
+          <div class="toggle-left">
+            <div class="toggle-icon">👤</div>
+            <span>Customer Details</span>
+            <span class="badge-optional">optional</span>
+          </div>
+          <div class="toggle-chevron" id="customerChevron">▸</div>
+        </div>
+        <div id="customerFields" class="customer-fields collapsed">
+          <div class="field-row">
+            <div class="field-group">
+              <label>Customer Name</label>
+              <input type="text" id="customerName" placeholder="e.g. Ravi Kumar" autocomplete="off">
+            </div>
+            <div class="field-group">
+              <label>Phone Number</label>
+              <input type="tel" id="customerPhone" placeholder="e.g. 9876543210" autocomplete="off">
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Address</label>
+            <textarea id="customerAddress" placeholder="Street, City, PIN" rows="2"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ITEM ENTRY CARD -->
+      <div class="card item-card">
+        <div class="card-header">
+          <h2>Add Item</h2>
+        </div>
+
+        <div class="search-wrap">
+          <label>Item Name</label>
+          <div class="search-input-wrap" id="searchInputWrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="itemName" placeholder="Start typing to search..." autocomplete="off">
+            <button class="clear-btn" id="clearItemBtn" title="Clear">✕</button>
+          </div>
+
+          <!-- Inline suggestions dropdown -->
+          <div id="suggestions" class="suggestions-dropdown" style="display:none;">
+            <div id="suggestionList"></div>
+            <div class="suggestions-footer" id="viewMoreBtn" style="display:none;">
+              <button class="link-btn" onclick="openProductModal()">View more results →</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label>Quantity</label>
+            <input id="qty" type="number" min="0.01" step="0.01" value="1" placeholder="Qty">
+          </div>
+          <div class="field-group">
+            <label>MRP (₹)</label>
+            <input id="price" type="number" min="0" step="0.01" placeholder="0.00">
+          </div>
+        </div>
+
+        <div class="discount-toggle-row">
+          <button class="toggle-discount-btn" id="discountToggleBtn" onclick="toggleDiscount()">
+            <span id="discountBtnIcon">＋</span> Add Item Discount
+          </button>
+        </div>
+
+        <div id="discountBox" class="discount-box" style="display:none;">
+          <label>Discount</label>
+          <div class="discount-row">
+            <select id="itemDiscountType" class="discount-type-select">
+              <option value="%">% Percent</option>
+              <option value="₹">₹ Flat</option>
+            </select>
+            <input id="itemDiscountValue" type="number" min="0" step="0.01" placeholder="0">
+          </div>
+          <div class="discount-preview" id="discountPreview"></div>
+        </div>
+
+        <button class="btn btn-primary btn-add" id="addItemBtn" onclick="addItem()">
+          + Add to Bill
+        </button>
+      </div>
+
+      <!-- BILL TABLE -->
+      <div class="card table-card" id="tableCard" style="display:none;">
+        <div class="card-header">
+          <h2>Bill Items</h2>
+          <span class="item-count" id="itemCount">0 items</span>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Item</th>
+                <th class="num">MRP</th>
+                <th class="num">Discount</th>
+                <th class="num">Unit Price</th>
+                <th class="num">Qty</th>
+                <th class="num">Amount</th>
+                <th class="actions-col"></th>
+              </tr>
+            </thead>
+            <tbody id="itemsBody"></tbody>
+          </table>
+        </div>
+        <div class="subtotal-row">
+          <span>Subtotal</span>
+          <span class="subtotal-val">₹ <span id="subtotal">0.00</span></span>
+        </div>
+      </div>
+
+      <div class="action-bar" id="finaliseBar" style="display:none;">
+        <button class="btn btn-success btn-lg" onclick="openFinalScreen()">
+          Finalise Bill →
+        </button>
+      </div>
+
+    </div><!-- /step1 -->
+
+    <!-- ===================== STEP 2: FINAL SCREEN ===================== -->
+    <div id="step2" style="display:none;">
+      <div class="card final-card">
+        <div class="card-header">
+          <h2>Finalise Bill</h2>
+        </div>
+
+        <!-- Summary table (read-only) -->
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Item</th>
+                <th class="num">Qty</th>
+                <th class="num">Unit Price</th>
+                <th class="num">Amount</th>
+              </tr>
+            </thead>
+            <tbody id="finalItemsBody"></tbody>
+          </table>
+        </div>
+
+        <div class="final-amounts">
+          <div class="amount-row">
+            <span>Subtotal</span>
+            <span class="mono">₹ <span id="finalSubtotal">0.00</span></span>
+          </div>
+
+          <div class="amount-row discount-input-row">
+            <span>Bill Discount</span>
+            <div class="discount-row">
+              <select id="billDiscountType" class="discount-type-select sm">
+                <option value="%">%</option>
+                <option value="₹">₹</option>
+              </select>
+              <input id="billDiscountValue" class="sm" type="number" min="0" step="0.01" placeholder="0">
+            </div>
+          </div>
+
+          <div class="amount-row total-row">
+            <span>Total Amount</span>
+            <span class="total-val mono">₹ <span id="finalAmount">0.00</span></span>
+          </div>
+        </div>
+
+        <div class="action-bar dual">
+          <button class="btn btn-ghost" onclick="closeFinalScreen()">← Back to Edit</button>
+          <button class="btn btn-success btn-lg" id="confirmBillBtn" onclick="saveBill()">
+            Save Bill
+          </button>
+        </div>
+      </div>
+    </div><!-- /step2 -->
+
+    <!-- ===================== STEP 3: SAVED ===================== -->
+    <div id="step3" style="display:none;">
+      <div class="card saved-card">
+        <div class="saved-icon">✓</div>
+        <h2>Bill Saved!</h2>
+        <p class="saved-sub">Bill <span class="mono" id="savedBillId"></span> has been saved successfully.</p>
+        <div class="action-bar dual">
+          <button class="btn btn-ghost" onclick="resetForm()">New Bill</button>
+          <a id="viewBillLink" href="#" class="btn btn-primary">View Bill →</a>
+        </div>
+      </div>
+    </div><!-- /step3 -->
+
+  </main>
+
+  <!-- ===================== PRODUCT SEARCH MODAL ===================== -->
+  <div id="productModal" class="modal-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Search Products</h3>
+        <button class="modal-close" onclick="closeProductModal()">✕</button>
+      </div>
+      <div class="modal-search">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="modalSearch" placeholder="Type to search..." autocomplete="off">
+      </div>
+      <div id="modalResultsList" class="modal-results"></div>
+    </div>
   </div>
-</div>
-  <hr />
 
-  <!-- ITEM LIST -->
-  <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
-  <table width="100%" border="1" cellspacing="0" cellpadding="6">
-  <thead>
-    <tr>
-      <th>S.No</th>
-      <th>Item</th>
-      <th>MRP</th>
-      <th>Discount</th>
-      <th>Final Unit Price</th>
-      <th>Amount</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="items"></tbody>
-</table>
-</div>
-
-
-  <h3 class="right">Subtotal: ₹ <span id="subtotal">0.00</span></h3>
-<button id="finaliseBtn" onclick="openFinalScreen()" class = "primary">
-  Finalise Bill
-</button>
-
-<!-- FINAL BILL SCREEN -->
-<div id="finalScreen" style="display:none; border-top:1px solid #ccc; margin-top:12px; padding-top:12px;">
-  <h3>Final Bill</h3>
-
-  <p>Subtotal: ₹ <span id="finalSubtotal">0.00</span></p>
-
-  <div class="row">
-    <select id="billDiscountType">
-      <option value="%">%</option>
-      <option value="₹">₹</option>
-    </select>
-    <input id="billDiscountValue" type="number" min="0" placeholder="Bill discount" />
+  <!-- ===================== EDIT ITEM MODAL ===================== -->
+  <div id="editModal" class="modal-overlay" style="display:none;">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Edit Item</h3>
+        <button class="modal-close" onclick="closeEditModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editIndex">
+        <div class="field-group">
+          <label>Item Name</label>
+          <input type="text" id="editName" placeholder="Item name">
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label>Quantity</label>
+            <input type="number" id="editQty" min="0.01" step="0.01">
+          </div>
+          <div class="field-group">
+            <label>MRP (₹)</label>
+            <input type="number" id="editPrice" min="0" step="0.01">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label>Discount Type</label>
+            <select id="editDiscountType">
+              <option value="">None</option>
+              <option value="%">% Percent</option>
+              <option value="₹">₹ Flat</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label>Discount Value</label>
+            <input type="number" id="editDiscountValue" min="0" step="0.01" placeholder="0">
+          </div>
+        </div>
+        <div class="edit-preview" id="editPreview"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeEditModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveEdit()">Save Changes</button>
+      </div>
+    </div>
   </div>
 
-  <h3>
-    Final Amount: ₹ <span id="finalAmount">0.00</span>
-  </h3>
+  <!-- ===================== DELETE CONFIRM MODAL ===================== -->
+  <div id="deleteModal" class="modal-overlay" style="display:none;">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h3>Remove Item?</h3>
+        <button class="modal-close" onclick="closeDeleteModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to remove <strong id="deleteItemName"></strong> from the bill?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeDeleteModal()">Cancel</button>
+        <button class="btn btn-danger" onclick="confirmDelete()">Remove</button>
+      </div>
+    </div>
+  </div>
 
-  <button onclick="closeFinalScreen()" class="secondary">Back to Edit</button>
-  <button id="confirmBillBtn">Confirm & Save Bill</button>
-  <button id="viewBillBtn"  onclick="viewBill()">
-    View Saved Bill</button>
+  <!-- Toast -->
+  <div id="toast" class="toast" style="display:none;"></div>
 
-</div>
-
-
-
-
-
-  <script type="module" src="/static/app.js"></script>
-
-
+  <script src="/static/billing.js"></script>
 </body>
-
 </html>
