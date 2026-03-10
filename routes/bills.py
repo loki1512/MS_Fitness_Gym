@@ -146,3 +146,16 @@ def update_bill(bill_id):
         ) 
     db.session.commit() 
     return jsonify({"message": "Bill updated successfully"})
+
+@bills_bp.route("/api/bills/<int:bill_id>", methods=["DELETE"])
+def delete_bill(bill_id):
+    bill = Bill.query.get_or_404(bill_id)
+
+    # Delete associated items first
+    BillItem.query.filter_by(bill_id=bill.id).delete()
+
+    # Then delete the bill
+    db.session.delete(bill)
+    db.session.commit()
+
+    return jsonify({"message": "Bill deleted successfully"}) ,200
