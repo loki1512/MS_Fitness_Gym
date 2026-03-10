@@ -1,10 +1,7 @@
 from flask import Blueprint, request, jsonify
-from flask_security import auth_required
 from extensions import db
 from models import Bill, BillItem
 from datetime import datetime
-from zoneinfo import ZoneInfo
-
 
 bills_bp = Blueprint("bills", __name__)
 
@@ -12,7 +9,6 @@ bills_bp = Blueprint("bills", __name__)
 # CREATE BILL (EXISTING - UNCHANGED)
 # -----------------------------
 @bills_bp.route("/api/bills", methods=["POST"])
-@auth_required()
 def save_bill():
     data = request.get_json(force=True)
 
@@ -27,8 +23,8 @@ def save_bill():
         customer_name=data.get("customer_name"),
         customer_phone=data.get("customer_phone"),
         customer_address=data.get("customer_address"),
-        #timestamp in india standard time
-        timestamp = datetime.now(ZoneInfo("Asia/Kolkata"))
+
+        timestamp=datetime.utcnow()
     )
 
     db.session.add(bill)
@@ -61,7 +57,6 @@ def save_bill():
 # LIST BILLS (NEW)
 # -----------------------------
 @bills_bp.route("/api/bills", methods=["GET"])
-@auth_required()
 def list_bills():
     bills = (
         Bill.query
@@ -84,7 +79,6 @@ def list_bills():
 # BILL DETAILS (NEW)
 # -----------------------------
 @bills_bp.route("/api/bills/<int:bill_id>", methods=["GET"])
-@auth_required()
 def get_bill(bill_id):
     bill = Bill.query.get_or_404(bill_id)
 
@@ -121,15 +115,34 @@ def get_bill(bill_id):
             for i in items
         ]
     })
-    
-@bills_bp.route("/api/bills/<int:bill_id>", methods=["DELETE"])
-@auth_required()
-def delete_bill(bill_id):
-    bill = Bill.query.get_or_404(bill_id)
 
-    # Delete associated items first
-    BillItem.query.filter_by(bill_id=bill.id).delete()
-    db.session.delete(bill)
-    db.session.commit()
-
-    return jsonify({"message": "Bill deleted successfully"})
+@bills_bp.route("/api/bills/<int:bill_id>", methods=["PUT"]) 
+def update_bill(bill_id): 
+    bill = Bill.query.get_or_404(bill_id) 
+    data = request.get_json(force=True) # Update bill details 
+    bill.subtotal = data["subtotal"] 
+    bill.final_amount = data["finalTotal"] 
+    bill_discount = data.get("billDiscount") or {} 
+    bill.bill_discount_type = bill_discount.get("type") 
+    bill.bill_discount_value = bill_discount.get("value") 
+    bill.customer_name = data.get("customer_name") 
+    bill.customer_phone = data.get("customer_phone") 
+    bill.customer_address = data.get("customer_address") 
+    # Remove existing items 
+    BillItem.query.filter_by(bill_id=bill.id).delete() 
+    # Add updated items 
+    for it in data["items"]: 
+        discount = it.get("discount") or {} 
+        db.session.add( 
+            BillItem( 
+                bill_id=bill.id, 
+                item_name=it["item_name"], 
+                qty=it["qty"], 
+                unit_price=it["unit_price"], 
+                item_discount_type=it["item_discount_type"], 
+                item_discount_value=it["item_discount_value"], 
+                final_item_amount=it["final_item_amount"] 
+            ) 
+        ) 
+    db.session.commit() 
+    return jsonify({"message": "Bill updated successfully"})

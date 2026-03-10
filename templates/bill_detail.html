@@ -134,6 +134,9 @@
 <button onclick="window.location='/bills'">
   🔙 Back to Bills
 </button>
+<button onclick="window.location='/bills/edit/{{ bill.id }}'">
+  ✏️ Edit Bill
+</button>
 <button onclick="deleteBill({{ bill.id }})" style="background-color:#e74c3c; color:white;">
   🗑️ Delete Bill
 </button>
