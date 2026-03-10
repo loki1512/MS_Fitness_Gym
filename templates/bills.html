@@ -35,7 +35,7 @@
     <input
       type="text"
       id="billSearch"
-      placeholder="Search bill #, customer, amount"
+      placeholder="Search bill #, customer, amount,phone number"
     />
 
     <div class="date-filters">
@@ -58,8 +58,9 @@
           <th>Bill #</th>
           <th>Date</th>
           <th>Customer</th>
-          <th class="right">Amount</th>
-          <th></th>
+          <th>Mobile Number</th>
+          <th>Amount</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -68,16 +69,24 @@
           class="bill-row"
           data-id="{{ bill.id }}"
           data-customer="{{ (bill.customer_name or 'Walk-in') | lower }}"
+          data-mobile="{{ bill.customer_phone or '' }}"
           data-date="{{ bill.timestamp.strftime('%Y-%m-%d') }}"
-          data-text="{{ (bill.id ~ ' ' ~ (bill.customer_name or 'walk-in') ~ ' ' ~ bill.final_amount) | lower }}"
+          data-text="{{ (
+                            bill.id ~ ' ' ~
+                            (bill.customer_name or 'walk-in') ~ ' ' ~
+                            (bill.customer_phone or '') ~ ' ' ~
+                            bill.final_amount
+                        ) | lower }}"
           onclick="window.location='/bills/{{ bill.id }}'"
         >
           <td>#{{ bill.id }}</td>
           <td>{{ bill.timestamp.strftime('%d %b %Y %H:%M') }}</td>
           <td>{{ bill.customer_name or 'Walk-in' }}</td>
-          <td class="right">₹{{ "%.2f"|format(bill.final_amount) }}</td>
+          <td>{{ bill.customer_phone or '-' }}</td>
+          <td>₹{{ "%.2f"|format(bill.final_amount) }}</td>
           <td class="view-link">
             <a href="/bills/{{ bill.id }}">View</a>
+            <a href ="/bills/edit/{{ bill.id }}" style="margin-left: 10px; color:#2563eb;">Edit</a>
           </td>
         </tr>
         {% else %}
