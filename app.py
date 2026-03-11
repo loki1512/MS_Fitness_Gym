@@ -16,6 +16,13 @@ def create_app():
         db_url = db_url.replace("postgres://", "postgresql://", 1)
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+    "pool_pre_ping": True,
+    "pool_recycle": 300,
+    "pool_size": 3,
+    "max_overflow": 2,
+    "isolation_level": "AUTOCOMMIT"
+    }
 
     # Flask-Security config
     app.config["SECURITY_PASSWORD_HASH"] = "bcrypt"
