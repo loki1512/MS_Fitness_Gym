@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from extensions import db
 from models import Bill, BillItem
 from datetime import datetime
+from sqlalchemy.exc import IntegrityError
 
 bills_bp = Blueprint("bills", __name__)
 
@@ -29,8 +30,8 @@ def save_bill():
     try:
         db.session.add(bill)
         db.session.flush()  # get bill.id before commit
-        
-    except IntegrityError:
+
+    except Exception as e:
         db.session.rollback()
 
         # fix sequence automatically
