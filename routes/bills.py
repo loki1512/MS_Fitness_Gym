@@ -50,19 +50,37 @@ def save_bill():
 
 
     for it in data["items"]:
-        discount = it.get("discount") or {}
+    discount = it.get("discount") or {}
 
-        db.session.add(
-            BillItem(
-                bill_id=bill.id,
-                item_name=it["name"],
-                qty=it["qty"],
-                unit_price=it["rate"],
-                item_discount_type=discount.get("type"),
-                item_discount_value=discount.get("value"),
-                final_item_amount=it["lineTotal"]
-            )
-        )
+    bill_item = BillItem(
+        bill_id=bill.id,
+        item_name=it["name"],
+        qty=it["qty"],
+        unit_price=it["rate"],
+        item_discount_type=discount.get("type"),
+        item_discount_value=discount.get("value"),
+        final_item_amount=it["lineTotal"]
+    )
+
+    try:
+        db.session.add(bill_item)
+        db.session.flush()
+
+    except IntegrityError:
+        db.session.rollback()
+
+        # fix bill_item sequence
+        db.session.execute(text("""
+            SELECT setval(
+                pg_get_serial_sequence('bill_item','id'),
+                COALESCE((SELECT MAX(id) FROM bill_item),1)
+            );
+        """))
+        db.session.commit()
+
+        # retry insert
+        db.session.add(bill_item)
+        db.session.flush()
 
     db.session.commit()
 
