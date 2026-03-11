@@ -11,8 +11,7 @@ bills_bp = Blueprint("bills", __name__)
 # CREATE BILL (EXISTING - UNCHANGED)
 # -----------------------------
 @bills_bp.route("/api/bills", methods=["POST"])
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy import text
+
 
 def save_bill():
     data = request.get_json(force=True)
