@@ -26,9 +26,26 @@ def save_bill():
 
         timestamp=datetime.utcnow()
     )
+    try:
+        db.session.add(bill)
+        db.session.flush()  # get bill.id before commit
+        
+    except IntegrityError:
+        db.session.rollback()
 
-    db.session.add(bill)
-    db.session.flush()  # get bill.id before commit
+        # fix sequence automatically
+        db.session.execute(text("""
+            SELECT setval(
+                pg_get_serial_sequence('bill','id'),
+                COALESCE((SELECT MAX(id) FROM bill),1)
+            );
+        """))
+        db.session.commit()
+
+        # retry insert
+        db.session.add(bill)
+        db.session.flush()
+
 
     for it in data["items"]:
         discount = it.get("discount") or {}
