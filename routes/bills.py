@@ -3,6 +3,7 @@ from extensions import db
 from models import Bill, BillItem
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import text
 
 bills_bp = Blueprint("bills", __name__)
 
