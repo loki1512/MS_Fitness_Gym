@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Dashboard – MS Fitness{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block body_class %}member-body{% endblock %}
+
+{% block sidebar_nav %}
+<a href="{{ url_for('pages.member_dashboard') }}" class="nav-item active">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+  Dashboard
+</a>
+<a href="{{ url_for('pages.member_subscription') }}" class="nav-item">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>
+  Subscription
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-grid" id="member-dashboard">
+
+  <!-- Stats row -->
+  <div class="stats-row" id="member-stats">
+    <div class="stat-card loading">
+      <div class="stat-card-label">Streak</div>
+      <div class="stat-card-value" id="stat-streak">–</div>
+      <div class="stat-card-sub">days in a row</div>
+    </div>
+    <div class="stat-card loading">
+      <div class="stat-card-label">Plan</div>
+      <div class="stat-card-value" id="stat-plan">–</div>
+      <div class="stat-card-sub" id="stat-plan-sub">–</div>
+    </div>
+    <div class="stat-card loading">
+      <div class="stat-card-label">Expires</div>
+      <div class="stat-card-value" id="stat-expiry">–</div>
+      <div class="stat-card-sub" id="stat-expiry-sub">–</div>
+    </div>
+  </div>
+
+  <!-- Subscription status -->
+  <div class="card" id="sub-status-card">
+    <div class="card-header">
+      <h3 class="card-title">Subscription Status</h3>
+      <a href="{{ url_for('pages.member_subscription') }}" class="btn btn-fire btn-sm">Manage</a>
+    </div>
+    <div class="card-body" id="sub-status-body">
+      <div class="skeleton-block"></div>
+    </div>
+  </div>
+
+  <!-- Attendance -->
+  <div class="card" id="attendance-card">
+    <div class="card-header">
+      <h3 class="card-title">Today's Attendance</h3>
+    </div>
+    <div class="card-body">
+      <div class="attendance-actions">
+        <button class="btn btn-fire" id="btn-checkin">Check In</button>
+        <button class="btn btn-ghost" id="btn-checkout">Check Out</button>
+      </div>
+      <div class="attendance-status" id="attendance-status"></div>
+    </div>
+  </div>
+
+  <!-- Recent attendance -->
+  <div class="card">
+    <div class="card-header"><h3 class="card-title">Recent Visits</h3></div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table class="data-table" id="attendance-table">
+          <thead><tr><th>Date</th><th>Check In</th><th>Check Out</th><th>Duration</th></tr></thead>
+          <tbody id="attendance-tbody"><tr><td colspan="4" class="table-empty">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/member-dashboard.js') }}"></script>
+{% endblock %}

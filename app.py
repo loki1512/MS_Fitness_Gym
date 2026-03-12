@@ -3,153 +3,174 @@ from flask import Flask, request, jsonify, redirect, url_for
 from extensions import db
 from flask_security import Security, SQLAlchemyUserDatastore, hash_password
 from flask_migrate import Migrate
-from sqlalchemy import inspect
+
 
 def create_app():
     app = Flask(__name__)
 
+    # ── Core config ────────────────────────────────────────────────────────────
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-change-me")
-    # Render sets DATABASE_URL; fix postgres:// → postgresql:// for SQLAlchemy
-    # db_url = os.environ.get("DATABASE_URL", "sqlite:///db.sqlite3")
+
     db_url = os.environ.get("SUPABASE_DB_URL", "sqlite:///db.sqlite3")
     if db_url.startswith("postgres://"):
         db_url = db_url.replace("postgres://", "postgresql://", 1)
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-    "pool_pre_ping": True,
-    "pool_recycle": 300,
-    "pool_size": 3,
-    "max_overflow": 2,
-    "isolation_level": "AUTOCOMMIT"
+        "pool_pre_ping": True,
+        "pool_recycle": 300,
+        "pool_size": 3,
+        "max_overflow": 2,
     }
 
-    # Flask-Security config
-    app.config["SECURITY_PASSWORD_HASH"] = "bcrypt"
-    app.config["SECURITY_PASSWORD_SALT"] = os.environ.get("SECURITY_PASSWORD_SALT", "dev-salt-change-me")
-    app.config["SECURITY_LOGIN_URL"] = "/login"
-    app.config["SECURITY_LOGOUT_URL"] = "/logout"
-    app.config["SECURITY_POST_LOGIN_VIEW"] = "/"
-    app.config["SECURITY_POST_LOGOUT_VIEW"] = "/login"
-    app.config["SECURITY_REGISTERABLE"] = False
-    app.config["SECURITY_SEND_REGISTER_EMAIL"] = False
+    # ── Flask-Security config ──────────────────────────────────────────────────
+    app.config["SECURITY_PASSWORD_HASH"]              = "bcrypt"
+    app.config["SECURITY_PASSWORD_SALT"]              = os.environ.get("SECURITY_PASSWORD_SALT", "dev-salt-change-me")
+    app.config["SECURITY_LOGIN_URL"]                  = "/login"
+    app.config["SECURITY_LOGOUT_URL"]                 = "/logout"
+    app.config["SECURITY_POST_LOGIN_VIEW"]             = "/"
+    app.config["SECURITY_POST_LOGOUT_VIEW"]            = "/login"
+    app.config["SECURITY_REGISTERABLE"]               = False
+    app.config["SECURITY_SEND_REGISTER_EMAIL"]        = False
     app.config["SECURITY_SEND_PASSWORD_CHANGE_EMAIL"] = False
-    app.config["SECURITY_SEND_PASSWORD_RESET_EMAIL"] = False
-    app.config["SECURITY_TOKEN_AUTHENTICATION_HEADER"] = ""
+    app.config["SECURITY_SEND_PASSWORD_RESET_EMAIL"]  = False
+    app.config["SECURITY_TOKEN_AUTHENTICATION_HEADER"]= ""
     app.config["SECURITY_CSRF_IGNORE_UNAUTH_ENDPOINTS"] = True
-    app.config["WTF_CSRF_ENABLED"] = False
-    app.config["SECURITY_CSRF_PROTECT_MECHANISMS"] = []
+    app.config["WTF_CSRF_ENABLED"]                    = False
+    app.config["SECURITY_CSRF_PROTECT_MECHANISMS"]    = []
 
+    # ── Extensions ─────────────────────────────────────────────────────────────
     db.init_app(app)
+    Migrate(app, db)
 
-    # ---- Flask-Security Setup ----
+    # ── Flask-Security setup ───────────────────────────────────────────────────
     from models import User, Role
+
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
     security = Security(app, user_datastore)
 
-    # Return JSON 401 for API routes, redirect for pages
     @security.unauthn_handler
     def unauthorized(mechanisms, headers=None):
         if request.path.startswith("/api/"):
             return jsonify({"error": "Authentication required"}), 401
         return redirect(url_for("security.login"))
 
-    # ---- Register Blueprints ----
-    from routes.pages import pages_bp
-    from routes.items import items_bp
-    from routes.bills import bills_bp
-    from routes.invoice import invoice_bp
-    from dashboard import dashboard_bp
+    # ── Blueprints ─────────────────────────────────────────────────────────────
+    from routes.pages           import pages_bp
+    from routes.member_routes   import member_bp
+    from routes.admin_routes    import admin_bp
+    from routes.payment_routes  import payment_bp
 
-    app.register_blueprint(dashboard_bp)
     app.register_blueprint(pages_bp)
-    app.register_blueprint(items_bp)
-    app.register_blueprint(bills_bp)
-    app.register_blueprint(invoice_bp)
+    app.register_blueprint(member_bp,  url_prefix="/api/member")
+    app.register_blueprint(admin_bp,   url_prefix="/api/admin")
+    app.register_blueprint(payment_bp, url_prefix="/api/payment")
 
-    # ---- Create tables & seed admin ----
+    # ── DB init & seeding ──────────────────────────────────────────────────────
     with app.app_context():
-        inspector = inspect(db.engine)
+        from sqlalchemy import inspect as sa_inspect
 
-        # if no tables exist → first run
+        inspector = sa_inspect(db.engine)
         if not inspector.get_table_names():
-            print("No tables found — initializing database...")
+            print("No tables found — initialising database...")
             db.create_all()
         else:
-            print("Database already initialized — skipping create_all()")
+            print("Database already initialised — skipping create_all()")
 
-        # Auto-migrate SQLite → PostgreSQL on first deploy
+        roles_def = {
+            "member":      "Basic member access",
+            "lead":        "Team lead",
+            "admin":       "Administrator",
+            "super_admin": "Super administrator",
+        }
+        for role_name, description in roles_def.items():
+            user_datastore.find_or_create_role(name=role_name, description=description)
+
+        if not user_datastore.find_user(email="admin@msfitness.com"):
+            admin_role = user_datastore.find_or_create_role(name="admin", description="Administrator")
+            user_datastore.create_user(
+                email="admin@msfitness.com",
+                password=hash_password("admin@123"),
+                roles=[admin_role],
+                username="admin",
+                phone="0000000000",
+            )
+
+        # Seed sample plans if none exist
+        from models import Plan
+        if Plan.query.count() == 0:
+            plans = [
+                Plan(name="Monthly",   duration_days=30,  price=999.0,  description="Full gym access for 1 month"),
+                Plan(name="Quarterly", duration_days=90,  price=2499.0, description="Full gym access for 3 months"),
+                Plan(name="Half Year", duration_days=180, price=4499.0, description="Full gym access for 6 months"),
+                Plan(name="Annual",    duration_days=365, price=7999.0, description="Full gym access for 1 year"),
+            ]
+            db.session.add_all(plans)
+
+        db.session.commit()
+
         if db_url.startswith("postgresql"):
             _auto_migrate_sqlite_to_pg(app)
 
-        if not user_datastore.find_user(email="admin@ksa.com"):
-            admin_role = user_datastore.find_or_create_role(name="admin", description="Administrator")
-            user_datastore.create_user(email="admin@ksa.com", password=hash_password("admin@123"), roles=[admin_role])
-            db.session.commit()
-        
     return app
 
 
 def _auto_migrate_sqlite_to_pg(app):
-    """One-time auto-migration: copies data from SQLite to PostgreSQL if PG is empty and SQLite has data."""
     import sqlite3
+    from sqlalchemy import text
 
     sqlite_path = os.path.join(app.instance_path, "db.sqlite3")
     if not os.path.exists(sqlite_path):
         return
 
-    # Check if PostgreSQL already has data (bills table)
-    from models import Bill
-    pg_count = Bill.query.count()
-    if pg_count > 0:
-        return  # Already migrated
+    try:
+        with db.engine.connect() as conn:
+            pg_user_count = conn.execute(text('SELECT COUNT(*) FROM "user"')).scalar()
+        if pg_user_count and pg_user_count > 0:
+            app.logger.info("PostgreSQL already has data — skipping migration.")
+            return
+    except Exception as exc:
+        app.logger.warning(f"Could not check PG user count: {exc}")
+        return
 
-    # Check if SQLite has data
     try:
         src = sqlite3.connect(sqlite_path)
         src.row_factory = sqlite3.Row
-        sqlite_bills = src.execute("SELECT COUNT(*) FROM bill").fetchone()[0]
-        if sqlite_bills == 0:
+        sqlite_user_count = src.execute("SELECT COUNT(*) FROM user").fetchone()[0]
+        if sqlite_user_count == 0:
             src.close()
-            return  # Nothing to migrate
-    except Exception:
+            return
+    except Exception as exc:
+        app.logger.warning(f"Could not read SQLite source: {exc}")
         return
 
-    # Migrate tables in order (respecting foreign keys)
-    tables = ["item", "bill", "bill_item"]
-    from sqlalchemy import text
+    tables = ["role","user","roles_users","admin","member","lead",
+              "plan","subscription","attendance","transaction"]
 
-    app.logger.info(f"Auto-migrating {sqlite_bills} bills from SQLite to PostgreSQL...")
-
+    app.logger.info(f"Auto-migrating {sqlite_user_count} users SQLite → PostgreSQL...")
     for table in tables:
         try:
-            rows = src.execute(f"SELECT * FROM {table}").fetchall()
+            rows = src.execute(f"SELECT * FROM [{table}]").fetchall()
         except Exception:
             continue
-
         if not rows:
             continue
-
-        col_names = rows[0].keys()
-        placeholders = ", ".join(f":{c}" for c in col_names)
-        col_list = ", ".join(col_names)
-        insert_sql = text(
-            f"INSERT INTO {table} ({col_list}) VALUES ({placeholders}) ON CONFLICT DO NOTHING"
-        )
-
-        for row in rows:
-            db.session.execute(insert_sql, dict(row))
-
-        db.session.commit()
-        app.logger.info(f"  Migrated {table}: {len(rows)} rows")
-
+        col_names   = list(rows[0].keys())
+        placeholders= ", ".join(f":{c}" for c in col_names)
+        col_list    = ", ".join(f'"{c}"' for c in col_names)
+        insert_sql  = text(f'INSERT INTO "{table}" ({col_list}) VALUES ({placeholders}) ON CONFLICT DO NOTHING')
+        try:
+            with db.engine.begin() as conn:
+                for row in rows:
+                    conn.execute(insert_sql, dict(row))
+            app.logger.info(f"  ✓ {table}: {len(rows)} rows")
+        except Exception as exc:
+            app.logger.error(f"  ✗ {table}: {exc}")
     src.close()
-    app.logger.info("SQLite → PostgreSQL migration complete!")
+    app.logger.info("Migration complete!")
 
 
 app = create_app()
-
-
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

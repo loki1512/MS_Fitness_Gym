@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block title %}Members – MS Fitness{% endblock %}
+{% block page_title %}Members{% endblock %}
+{% block body_class %}admin-body{% endblock %}
+
+{% block sidebar_nav %}
+<a href="{{ url_for('pages.admin_dashboard') }}" class="nav-item">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+  Dashboard
+</a>
+<a href="{{ url_for('pages.admin_members') }}" class="nav-item active">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+  Members
+</a>
+<a href="{{ url_for('pages.admin_payments') }}" class="nav-item">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+  Payments
+</a>
+<a href="{{ url_for('pages.admin_plans') }}" class="nav-item">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+  Plans
+</a>
+{% endblock %}
+
+{% block topbar_right %}
+<button class="btn btn-fire btn-sm" id="btn-add-member">+ Add Member</button>
+{% endblock %}
+
+{% block content %}
+<div class="admin-members">
+  <div class="card">
+    <div class="card-header">
+      <div class="search-wrap">
+        <input type="text" id="member-search" class="search-input" placeholder="Search name, username or phone…"/>
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Name</th><th>Username</th><th>Phone</th><th>Joined</th><th>Streak</th><th>Subscription</th><th>Actions</th></tr></thead>
+          <tbody id="members-tbody"><tr><td colspan="7" class="table-empty">Loading…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="pagination" id="members-pagination"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Member detail drawer -->
+<div class="drawer-backdrop" id="member-drawer-backdrop"></div>
+<aside class="drawer" id="member-drawer">
+  <div class="drawer-header">
+    <h3 class="drawer-title" id="drawer-title">Member Details</h3>
+    <button class="drawer-close" id="drawer-close">✕</button>
+  </div>
+  <div class="drawer-body" id="drawer-body">
+    <div class="skeleton-block"></div>
+    
+  </div>
+  <!-- Drawer footer -->
+  <div class="drawer-footer">
+    <button class="btn btn-ghost btn-sm" id="drawer-extend-sub" style="display:none;">
+    Extend Subscription
+  </button>
+    <button class="btn btn-fire btn-sm" id="drawer-edit-member" style="display:none;">
+      Edit Member
+    </button>
+
+  </div>
+
+</aside>
+
+
+<div class="modal-backdrop" id="edit-member-modal" style="display:none;">
+  <div class="modal modal-lg">
+    <div class="modal-header"><h3>Edit Member</h3></div>
+
+    <div class="modal-body">
+      <div class="modal-grid">
+
+        <div class="field">
+          <label>Name</label>
+          <input type="text" id="edit-name">
+        </div>
+
+        <div class="field">
+          <label>Phone</label>
+          <input type="text" id="edit-phone">
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="edit-email">
+        </div>
+
+        <div class="field">
+          <label>Profession</label>
+          <input type="text" id="edit-profession">
+        </div>
+
+        <div class="field">
+          <label>Height (cm)</label>
+          <input type="number" id="edit-height">
+        </div>
+
+        <div class="field">
+          <label>Weight (kg)</label>
+          <input type="number" id="edit-weight">
+        </div>
+
+      </div>
+
+      <div class="field-error" id="edit-member-error"></div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="edit-member-cancel">Cancel</button>
+      <button class="btn btn-fire" id="edit-member-confirm">Update Member</button>
+    </div>
+  </div>
+</div>
+
+<!-- Extend subscription modal -->
+ <div class="modal-backdrop" id="extend-sub-modal" style="display:none;">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Extend Subscription</h3>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="modal-grid">
+
+        <div class="field">
+          <label>Extend by (days)</label>
+          <input type="number" id="extend-days" placeholder="e.g. 30">
+        </div>
+
+      </div>
+
+      <div class="field-error" id="extend-sub-error"></div>
+
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="extend-sub-cancel">Cancel</button>
+      <button class="btn btn-fire" id="extend-sub-confirm">Extend</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add member modal -->
+<div class="modal-backdrop" id="add-member-modal" style="display:none;">
+  <div class="modal modal-lg">
+    <div class="modal-header"><h3>Add New Member</h3></div>
+    <div class="modal-body">
+      <div class="modal-grid">
+        <div class="field"><label>Name</label><input type="text" id="new-name" placeholder="Full name"/></div>
+        <div class="field"><label>Username *</label><input type="text" id="new-username" placeholder="username"/></div>
+        <div class="field"><label>Phone *</label><input type="text" id="new-phone" placeholder="+91 00000 00000"/></div>
+        <div class="field"><label>Email</label><input type="email" id="new-email" placeholder="optional"/></div>
+        <div class="field"><label>Password</label><input type="text" id="new-password" placeholder="Default: ms@123"/></div>
+        <div class="field"><label>Profession</label><input type="text" id="new-profession" placeholder="optional"/></div>
+      </div>
+      <div class="field-error" id="add-member-error"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="add-member-cancel">Cancel</button>
+      <button class="btn btn-fire" id="add-member-confirm">Create Member</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/admin-members.js') }}"></script>
+{% endblock %}

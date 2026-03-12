@@ -1,110 +1,83 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Login | Kumara Swami Agencies</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background: #f3f4f6;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-    .login-card {
-      background: #fff;
-      padding: 32px;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-      width: 100%;
-      max-width: 380px;
-      margin: 16px;
-    }
-    .login-card h1 {
-      text-align: center;
-      font-size: 1.4rem;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-    .subtitle {
-      text-align: center;
-      color: #6b7280;
-      font-size: 0.9rem;
-      margin-bottom: 24px;
-    }
-    .login-card label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #374151;
-      margin-bottom: 4px;
-    }
-    .login-card input[type="text"],
-    .login-card input[type="password"] {
-      width: 100%;
-      padding: 10px 12px;
-      margin-bottom: 16px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.15s;
-    }
-    .login-card input:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
-    }
-    .login-card button {
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(135deg, #2563eb, #1e40af);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.15s;
-    }
-    .login-card button:hover { opacity: 0.9; }
-    .flash-error {
-      background: #fef2f2;
-      color: #b91c1c;
-      padding: 10px 12px;
-      border-radius: 8px;
-      margin-bottom: 16px;
-      font-size: 0.85rem;
-      text-align: center;
-    }
-  </style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login – MS Fitness</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}"/>
 </head>
-<body>
-  <div class="login-card">
-    <h1>Kumara Swami Agencies</h1>
-    <p class="subtitle">Admin Login</p>
+<body class="auth-body">
+<div class="noise"></div>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, msg in messages %}
-          <div class="flash-error">{{ msg }}</div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-
-    <form method="POST" action="{{ url_for('security.login') }}">
-      {{ login_user_form.hidden_tag() }}
-
-      <label for="email">Email</label>
-      <input type="text" id="email" name="email" placeholder="Email" required autofocus />
-
-      <label for="password">Password</label>
-      <input type="password" id="password" name="password" placeholder="Password" required />
-
-      <button type="submit">Log In</button>
-    </form>
+<div class="auth-wrap">
+  <div class="auth-left">
+    <div class="auth-left-inner">
+      <a href="/" class="auth-logo">MS<span>.</span>Fitness</a>
+      <h1 class="auth-headline">Push.<br><span>Lift.</span><br>Repeat.</h1>
+      <p class="auth-tagline">Your fitness journey continues here. Log in to track your progress, manage subscriptions, and stay consistent.</p>
+      <div class="auth-stats">
+        <div class="auth-stat"><span class="auth-stat-n">500+</span><span class="auth-stat-l">Members</span></div>
+        <div class="auth-stat"><span class="auth-stat-n">10+</span><span class="auth-stat-l">Trainers</span></div>
+        <div class="auth-stat"><span class="auth-stat-n">5yr</span><span class="auth-stat-l">Excellence</span></div>
+      </div>
+    </div>
+    <div class="auth-bg-word">MS</div>
   </div>
+
+  <div class="auth-right">
+    <div class="auth-form-wrap">
+      <div class="auth-form-eyebrow">Welcome back</div>
+      <h2 class="auth-form-title">Login</h2>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for cat, msg in messages %}
+          <div class="auth-alert auth-alert-{{ cat }}">{{ msg }}</div>
+        {% endfor %}
+      {% endwith %}
+
+      <form method="POST" action="{{ url_for('security.login') }}" id="login-form">
+        {{ login_user_form.hidden_tag() if login_user_form.hidden_tag is defined }}
+
+        <div class="auth-field">
+          <label for="email">Username or Email</label>
+          <div class="auth-input-wrap">
+            <input type="text" name="email" id="email" placeholder="your_username" autocomplete="username" required/>
+            <div class="auth-input-line"></div>
+          </div>
+        </div>
+
+        <div class="auth-field">
+          <label for="password">Password</label>
+          <div class="auth-input-wrap">
+            <input type="password" name="password" id="password" placeholder="••••••••" autocomplete="current-password" required/>
+            <button type="button" class="auth-toggle-pw" data-target="password" aria-label="Show password">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+            <div class="auth-input-line"></div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-fire btn-full">
+          <span>Login</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </form>
+
+      <p class="auth-switch">Don't have an account? <a href="{{ url_for('pages.register_page') }}">Register</a></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.auth-toggle-pw').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const inp = document.getElementById(btn.dataset.target);
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+    });
+  });
+</script>
 </body>
 </html>

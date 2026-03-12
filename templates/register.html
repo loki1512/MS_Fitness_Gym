@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join MS Fitness – Create Your Account</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}" />
+</head>
+<body>
+
+  <div class="noise"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="{{ url_for('pages.index') }}" class="nav-logo">MS<span>.</span>Fitness</a>
+    <a href="{{ url_for('security.login') }}" class="btn btn-ghost">Already a member? Login</a>
+  </nav>
+
+  <!-- LAYOUT -->
+  <main class="layout">
+
+    <!-- LEFT PANEL -->
+    <aside class="panel-left">
+      <div class="panel-left-inner">
+        <div class="panel-tag">New Member</div>
+        <h1 class="panel-title">Start Your<br><span>Journey</span><br>Today.</h1>
+        <p class="panel-sub">Join hundreds of members who've already transformed their lives at MS Fitness. Takes less than 2 minutes.</p>
+
+        <div class="panel-steps">
+          <div class="step">
+            <div class="step-dot active" id="dot-1"></div>
+            <div class="step-info">
+              <div class="step-label">Step 1</div>
+              <div class="step-name">Your Account</div>
+            </div>
+          </div>
+          <div class="step-connector" id="step-connector"></div>
+          <div class="step">
+            <div class="step-dot" id="dot-2"></div>
+            <div class="step-info">
+              <div class="step-label">Step 2</div>
+              <div class="step-name">Your Profile</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-perks">
+          <div class="perk">✔ <span>Access to all facilities</span></div>
+          <div class="perk">✔ <span>Expert trainer support</span></div>
+          <div class="perk">✔ <span>Track your streaks &amp; progress</span></div>
+        </div>
+      </div>
+
+      <div class="bg-number" id="bg-number">01</div>
+    </aside>
+
+    <!-- RIGHT PANEL -->
+    <section class="panel-right">
+
+      <!-- STAGE 1: Account details -->
+      <div class="form-stage active" id="stage-1">
+        <div class="form-header">
+          <div class="form-eyebrow">Step 1 of 2</div>
+          <h2 class="form-title">Create Account</h2>
+          <p class="form-sub">Fill in your basic details to get started.</p>
+        </div>
+
+        <form id="form-stage-1" novalidate>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="username">Username <span class="req">*</span></label>
+              <div class="input-wrap">
+                <input type="text" id="username" name="username"
+                  placeholder="e.g. john_doe" autocomplete="username" />
+                <div class="input-line"></div>
+              </div>
+              <div class="field-error" id="err-username"></div>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="email">Email <span class="opt">(optional)</span></label>
+              <div class="input-wrap">
+                <input type="email" id="email" name="email"
+                  placeholder="you@example.com" autocomplete="email" />
+                <div class="input-line"></div>
+              </div>
+              <div class="field-error" id="err-email"></div>
+            </div>
+          </div>
+
+          <div class="field-row two-col">
+            <div class="field">
+              <label for="password">Password <span class="req">*</span></label>
+              <div class="input-wrap">
+                <input type="password" id="password" name="password"
+                  placeholder="Min. 8 characters" autocomplete="new-password" />
+                <button type="button" class="toggle-pw" data-target="password" aria-label="Toggle password visibility">
+                  <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+                <div class="input-line"></div>
+              </div>
+              <div class="field-error" id="err-password"></div>
+            </div>
+
+            <div class="field">
+              <label for="confirm-password">Confirm Password <span class="req">*</span></label>
+              <div class="input-wrap">
+                <input type="password" id="confirm-password" name="confirm_password"
+                  placeholder="Repeat password" autocomplete="new-password" />
+                <button type="button" class="toggle-pw" data-target="confirm-password" aria-label="Toggle password visibility">
+                  <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+                <div class="input-line"></div>
+              </div>
+              <div class="field-error" id="err-confirm-password"></div>
+            </div>
+          </div>
+
+          <!-- Password strength -->
+          <div class="pw-strength">
+            <div class="pw-bar"><div class="pw-fill" id="pw-fill"></div></div>
+            <span class="pw-label" id="pw-label">Enter a password</span>
+          </div>
+
+          <div class="field-row two-col">
+            <div class="field">
+              <label for="phone">Phone <span class="req">*</span></label>
+              <div class="input-wrap">
+                <input type="tel" id="phone" name="phone"
+                  placeholder="+91 00000 00000" autocomplete="tel" />
+                <div class="input-line"></div>
+              </div>
+              <div class="field-error" id="err-phone"></div>
+            </div>
+
+            <div class="field">
+              <label for="profession">Profession <span class="opt">(optional)</span></label>
+              <div class="input-wrap">
+                <input type="text" id="profession" name="profession"
+                  placeholder="e.g. Software Engineer" />
+                <div class="input-line"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-fire btn-lg">
+              <span>Continue</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+
+        </form>
+      </div><!-- /stage-1 -->
+
+      <!-- STAGE 2: Optional profile -->
+      <div class="form-stage" id="stage-2">
+        <div class="form-header">
+          <div class="form-eyebrow">Step 2 of 2</div>
+          <h2 class="form-title">Your Profile</h2>
+          <p class="form-sub">Optional — helps us personalise your experience.</p>
+        </div>
+
+        <form id="form-stage-2" novalidate>
+
+          <div class="field-row two-col">
+            <div class="field">
+              <label for="height">Height <span class="opt">(cm)</span></label>
+              <div class="input-wrap">
+                <input type="number" id="height" name="height_cm"
+                  placeholder="e.g. 175" min="100" max="250" step="0.1" />
+                <div class="input-line"></div>
+              </div>
+              <div class="field-error" id="err-height"></div>
+            </div>
+
+            <div class="field">
+              <label for="weight">Weight <span class="opt">(kg)</span></label>
+              <div class="input-wrap">
+                <input type="number" id="weight" name="weight_kg"
+                  placeholder="e.g. 70" min="30" max="300" step="0.1" />
+                <div class="input-line"></div>
+              </div>
+              <div class="field-error" id="err-weight"></div>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="dob">Date of Birth <span class="opt">(optional)</span></label>
+              <div class="input-wrap">
+                <input type="date" id="dob" name="dob" max="" />
+                <div class="input-line"></div>
+              </div>
+              <div class="field-error" id="err-dob"></div>
+            </div>
+          </div>
+
+          <!-- API error banner -->
+          <div class="api-error" id="api-error"></div>
+
+          <div class="form-actions two-actions">
+            <button type="button" class="btn btn-ghost btn-lg" id="btn-back">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              <span>Back</span>
+            </button>
+            <button type="submit" class="btn btn-fire btn-lg" id="btn-submit">
+              <span>Join Now</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
+
+        </form>
+      </div><!-- /stage-2 -->
+
+      <!-- SUCCESS -->
+      <div class="form-stage" id="stage-success">
+        <div class="success-inner">
+          <div class="success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <h2 class="form-title">You're In!</h2>
+          <p class="form-sub">Welcome to MS Fitness, <strong id="success-name"></strong>.<br>Your account has been created successfully.</p>
+          <a href="{{ url_for('security.login') }}" class="btn btn-fire btn-lg"
+             style="margin-top:2.5rem; display:inline-flex; text-decoration:none;">
+            <span>Go to Login</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/register.js') }}"></script>
+</body>
+</html>

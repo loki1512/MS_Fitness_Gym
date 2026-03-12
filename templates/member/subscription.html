@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Subscription – MS Fitness{% endblock %}
+{% block page_title %}Subscription{% endblock %}
+{% block body_class %}member-body{% endblock %}
+
+{% block sidebar_nav %}
+<a href="{{ url_for('pages.member_dashboard') }}" class="nav-item">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+  Dashboard
+</a>
+<a href="{{ url_for('pages.member_subscription') }}" class="nav-item active">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>
+  Subscription
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="sub-page">
+
+  <!-- Current subscription -->
+  <div class="card" id="current-sub-card">
+    <div class="card-header"><h3 class="card-title">Current Subscription</h3></div>
+    <div class="card-body" id="current-sub-body">
+      <div class="skeleton-block"></div>
+    </div>
+  </div>
+
+  <!-- Pending request notice -->
+  <div class="card notice-card" id="pending-card" style="display:none;">
+    <div class="notice-icon">⏳</div>
+    <div class="notice-content">
+      <div class="notice-title">Payment Request Pending</div>
+      <div class="notice-sub" id="pending-detail">Awaiting admin approval.</div>
+    </div>
+    <button class="btn btn-ghost btn-sm" id="btn-cancel-pending">Cancel Request</button>
+  </div>
+
+  <!-- Plan selection -->
+  <div class="card" id="plan-select-card">
+    <div class="card-header">
+      <h3 class="card-title">Choose a Plan</h3>
+      <div class="card-sub" id="renewal-hint"></div>
+    </div>
+    <div class="card-body">
+      <div class="plan-grid" id="plan-grid">
+        <div class="skeleton-block"></div>
+      </div>
+
+      <!-- Payment mode -->
+      <div class="payment-mode-section" id="payment-mode-section" style="display:none;">
+        <label class="field-label">Payment Mode</label>
+        <div class="mode-options">
+          <label class="mode-option">
+            <input type="radio" name="payment_mode" value="cash" checked/>
+            <span>💵 Cash</span>
+          </label>
+          <label class="mode-option">
+            <input type="radio" name="payment_mode" value="upi"/>
+            <span>📱 UPI</span>
+          </label>
+          <label class="mode-option">
+            <input type="radio" name="payment_mode" value="card"/>
+            <span>💳 Card</span>
+          </label>
+        </div>
+
+        <div class="payment-summary" id="payment-summary"></div>
+
+        <button class="btn btn-fire btn-lg" id="btn-initialize-payment">
+          <span>Initialise Payment</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Subscription history -->
+  <div class="card">
+    <div class="card-header"><h3 class="card-title">History</h3></div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Plan</th><th>Amount</th><th>Mode</th><th>Status</th><th>Start</th><th>End</th><th>Date</th></tr></thead>
+          <tbody id="sub-history-tbody"><tr><td colspan="7" class="table-empty">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Confirm modal -->
+<div class="modal-backdrop" id="confirm-modal" style="display:none;">
+  <div class="modal">
+    <div class="modal-header"><h3>Confirm Payment Request</h3></div>
+    <div class="modal-body" id="confirm-modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="modal-cancel">Cancel</button>
+      <button class="btn btn-fire" id="modal-confirm">Send Request</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/member-subscription.js') }}"></script>
+{% endblock %}

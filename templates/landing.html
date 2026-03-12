@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MS Fitness – Transform Your Body. Transform Your Life.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,400;0,600;0,700;1,400&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --fire: #FF3C00;
+      --fire-bright: #FF6A1A;
+      --black: #0A0A0A;
+      --dark: #111111;
+      --dark2: #1A1A1A;
+      --mid: #2A2A2A;
+      --steel: #888;
+      --white: #F5F0EB;
+      --off: #CFCAC4;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Barlow', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.35;
+    }
+
+    /* ── NAV ── */
+    nav {
+      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5vw;
+      height: 68px;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,60,0,0.2);
+      margin-bottom: auto;
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.05em;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--fire); }
+
+    .nav-links {
+      display: flex; gap: 2rem; align-items: center;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--off);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--fire); }
+
+    .nav-actions { display: flex; gap: 0.75rem; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none; cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-ghost {
+      padding: 0.5rem 1.2rem;
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      color: var(--white);
+      border-radius: 2px;
+    }
+    .btn-ghost:hover {
+      border-color: var(--fire);
+      color: var(--fire);
+    }
+
+    .btn-fire {
+      padding: 0.5rem 1.4rem;
+      background: var(--fire);
+      color: var(--white);
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-fire::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%);
+      transform: translateX(-100%);
+      transition: transform 0.5s;
+    }
+    .btn-fire:hover::after { transform: translateX(100%); }
+    .btn-fire:hover { background: var(--fire-bright); transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 0 5vw;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 70% 50%, rgba(255,60,0,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(255,60,0,0.06) 0%, transparent 50%),
+        linear-gradient(160deg, #0A0A0A 0%, #111 60%, #0D0D0D 100%);
+    }
+
+    /* Diagonal stripe accent */
+    .hero-stripe {
+      position: absolute;
+      top: 0; right: 0;
+      width: 45%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        -55deg,
+        transparent,
+        transparent 40px,
+        rgba(255,60,0,0.025) 40px,
+        rgba(255,60,0,0.025) 41px
+      );
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      position: absolute;
+      top: 30%;
+      right: 6vw;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,60,0,0.4);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      animation: spin-slow 20s linear infinite;
+      opacity: 0.7;
+    }
+    .hero-badge-inner {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.8rem;
+      color: var(--fire);
+      line-height: 1;
+    }
+    .hero-badge-sub {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--off);
+    }
+    @keyframes spin-slow {
+      to { transform: rotate(360deg); }
+    }
+
+    .hero-content {
+      padding-bottom: 10%;
+      position: relative; z-index: 2;
+      max-width: 800px;
+      animation: fade-up 0.9s ease both;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--fire);
+      margin-bottom: 1.2rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 40px; height: 2px;
+      background: var(--fire);
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 10vw, 9rem);
+      line-height: 0.92;
+      letter-spacing: 0.02em;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 .accent { color: var(--fire); }
+
+    .hero p {
+      font-size: clamp(1rem, 1.5vw, 1.2rem);
+      color: var(--off);
+      max-width: 540px;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-ctas {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+    }
+    .btn-hero-primary {
+      padding: 1rem 2.5rem;
+      font-size: 1rem;
+      background: var(--fire);
+      color: var(--white);
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-hero-primary::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%);
+      transform: translateX(-100%);
+      transition: transform 0.5s;
+    }
+    .btn-hero-primary:hover::after { transform: translateX(100%); }
+    .btn-hero-primary:hover { background: var(--fire-bright); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(255,60,0,0.4); }
+
+    .btn-hero-secondary {
+      padding: 1rem 2.5rem;
+      font-size: 1rem;
+      background: transparent;
+      color: var(--white);
+      border: 2px solid rgba(255,255,255,0.25);
+      border-radius: 2px;
+    }
+    .btn-hero-secondary:hover {
+      border-color: var(--white);
+      background: rgba(255,255,255,0.06);
+    }
+
+    .hero-stats {
+      position: absolute;
+      bottom: 2.5rem; left: 5vw;
+      display: flex; gap: 3rem;
+      z-index: 2;
+      animation: fade-up 1.2s ease both;
+    }
+    .stat-item { text-align: left; }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      color: var(--white);
+      line-height: 1;
+    }
+    .stat-num span { color: var(--fire); }
+    .stat-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--steel);
+    }
+
+    /* ── TICKER ── */
+    .ticker {
+      background: var(--fire);
+      padding: 0.75rem 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .ticker-track {
+      display: flex;
+      animation: ticker 25s linear infinite;
+      white-space: nowrap;
+    }
+    .ticker-item {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      color: var(--white);
+      padding: 0 2rem;
+      flex-shrink: 0;
+    }
+    .ticker-dot {
+      color: rgba(255,255,255,0.4);
+    }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ── SECTION BASE ── */
+    section {
+      padding: 6rem 5vw;
+    }
+
+    .section-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--fire);
+      margin-bottom: 0.75rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .section-label::before {
+      content: '';
+      display: inline-block;
+      width: 30px; height: 2px;
+      background: var(--fire);
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      letter-spacing: 0.03em;
+      line-height: 0.95;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── ABOUT ── */
+    .about {
+      background: var(--dark);
+      position: relative;
+      overflow: hidden;
+    }
+    .about::before {
+      content: 'MS';
+      position: absolute;
+      right: -2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22vw;
+      color: rgba(255,60,0,0.04);
+      pointer-events: none;
+      line-height: 1;
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+      position: relative; z-index: 1;
+    }
+    .about-text p {
+      font-size: 1.1rem;
+      color: var(--off);
+      line-height: 1.8;
+      margin-bottom: 1.2rem;
+    }
+    .about-visual {
+      position: relative;
+    }
+    .about-card {
+      background: var(--mid);
+      border: 1px solid rgba(255,60,0,0.15);
+      padding: 2.5rem;
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+    .about-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px; height: 100%;
+      background: var(--fire);
+    }
+    .about-card-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      color: var(--fire);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .about-card-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--steel);
+    }
+    .about-cards-stack {
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+
+    /* ── FACILITIES ── */
+    .facilities {
+      background: var(--black);
+    }
+    .facilities-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 4rem;
+    }
+    .facilities-header .section-label { justify-content: center; }
+    .facilities-header .section-label::before { display: none; }
+
+    .facilities-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px;
+      background: rgba(255,60,0,0.1);
+    }
+    .facility-card {
+      background: var(--dark);
+      padding: 2.5rem 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.3s;
+    }
+    .facility-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--fire);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+      transform-origin: left;
+    }
+    .facility-card:hover::before { transform: scaleX(1); }
+    .facility-card:hover { background: var(--dark2); }
+
+    .facility-emoji {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .facility-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+    .facility-desc {
+      font-size: 0.9rem;
+      color: var(--steel);
+      line-height: 1.6;
+    }
+
+    /* ── WHY US ── */
+    .why {
+      background: var(--fire);
+      position: relative;
+      overflow: hidden;
+    }
+    .why::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 30px,
+        rgba(0,0,0,0.06) 30px,
+        rgba(0,0,0,0.06) 31px
+      );
+    }
+    .why-inner {
+      position: relative; z-index: 1;
+    }
+    .why .section-label { color: rgba(255,255,255,0.7); }
+    .why .section-label::before { background: rgba(255,255,255,0.5); }
+    .why .section-title { color: var(--white); }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0;
+      margin-top: 3rem;
+    }
+    .why-item {
+      padding: 1.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      display: flex; align-items: flex-start; gap: 1rem;
+    }
+    .why-item:nth-child(odd) { padding-right: 3rem; }
+    .why-item:nth-child(even) { padding-left: 3rem; border-left: 1px solid rgba(255,255,255,0.15); }
+
+    .why-check {
+      font-size: 1.2rem;
+      margin-top: 0.1rem;
+      flex-shrink: 0;
+    }
+    .why-text {
+      font-family: 'Barlow', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    /* ── CTA SECTION ── */
+    .cta-section {
+      background: var(--dark);
+      text-align: center;
+      padding: 8rem 5vw;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 70% at 50% 50%, rgba(255,60,0,0.1) 0%, transparent 60%);
+    }
+    .cta-section .section-label { justify-content: center; }
+    .cta-section .section-label::before { display: none; }
+    .cta-section .section-title {
+      font-size: clamp(3rem, 7vw, 7rem);
+      max-width: 900px;
+      margin: 0 auto 1rem;
+    }
+    .cta-section p {
+      font-size: 1.15rem;
+      color: var(--off);
+      margin-bottom: 3rem;
+      position: relative;
+    }
+    .cta-buttons {
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+      position: relative;
+    }
+    .btn-cta-primary {
+      padding: 1.1rem 3rem;
+      font-size: 1.05rem;
+      background: var(--fire);
+      color: var(--white);
+      border-radius: 2px;
+      position: relative; overflow: hidden;
+    }
+    .btn-cta-primary:hover { background: var(--fire-bright); transform: translateY(-2px); box-shadow: 0 16px 50px rgba(255,60,0,0.4); }
+    .btn-cta-secondary {
+      padding: 1.1rem 3rem;
+      font-size: 1.05rem;
+      background: transparent;
+      color: var(--white);
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 2px;
+    }
+    .btn-cta-secondary:hover { border-color: var(--white); background: rgba(255,255,255,0.06); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--black);
+      border-top: 1px solid rgba(255,60,0,0.2);
+      padding: 4rem 5vw 2rem;
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 4rem;
+      margin-bottom: 3rem;
+    }
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      color: var(--white);
+      display: block;
+      margin-bottom: 1rem;
+    }
+    .footer-logo span { color: var(--fire); }
+    .footer-tagline {
+      font-size: 0.95rem;
+      color: var(--steel);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      max-width: 320px;
+    }
+    .footer-contact p {
+      font-size: 0.9rem;
+      color: var(--off);
+      margin-bottom: 0.5rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .footer-col-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--fire);
+      margin-bottom: 1.2rem;
+    }
+    .footer-links {
+      list-style: none;
+      display: flex; flex-direction: column; gap: 0.6rem;
+    }
+    .footer-links a {
+      font-size: 0.9rem;
+      color: var(--steel);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+
+    .social-links {
+      display: flex; gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+    .social-link {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 38px; height: 38px;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 2px;
+      font-size: 0.85rem;
+      color: var(--steel);
+      text-decoration: none;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+    .social-link:hover { border-color: var(--fire); color: var(--fire); background: rgba(255,60,0,0.08); }
+
+    .footer-bottom {
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-copy {
+      font-size: 0.8rem;
+      color: var(--steel);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── HAMBURGER BUTTON ── */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 44px; height: 44px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      z-index: 200;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 24px; height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s, width 0.3s;
+      transform-origin: center;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── MOBILE DRAWER ── */
+    .mobile-drawer {
+      display: none;
+      position: fixed;
+      top: 68px; left: 0; right: 0; bottom: 0;
+      background: rgba(10,10,10,0.98);
+      backdrop-filter: blur(16px);
+      z-index: 99;
+      flex-direction: column;
+      padding: 2rem 5vw 3rem;
+      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    }
+    .mobile-drawer.open {
+      transform: translateX(0);
+    }
+    .mobile-drawer ul {
+      list-style: none;
+      display: flex; flex-direction: column;
+      gap: 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 2rem;
+    }
+    .mobile-drawer ul li a {
+      display: block;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.05em;
+      color: var(--white);
+      text-decoration: none;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      transition: color 0.2s, padding-left 0.2s;
+    }
+    .mobile-drawer ul li a:hover { color: var(--fire); padding-left: 0.5rem; }
+    .mobile-drawer-actions {
+      display: flex; flex-direction: column; gap: 0.75rem;
+    }
+    .mobile-drawer-actions .btn {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+      justify-content: center;
+      border-radius: 2px;
+    }
+
+    /* ── TABLET (≤ 900px) ── */
+    @media (max-width: 900px) {
+      /* Nav */
+      .nav-links { display: none; }
+      .nav-actions { display: none; }
+      .nav-hamburger { display: flex; }
+      .mobile-drawer { display: flex; }
+
+      /* Hero */
+      .hero { padding-top: 68px; padding-bottom: 6rem; align-items: flex-start; padding-top: 120px; }
+      .hero-badge { display: none; }
+      .hero-stats {
+        gap: 1.5rem;
+        bottom: 2rem;
+        flex-wrap: wrap;
+      }
+
+      /* About */
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .about-cards-stack { flex-direction: row; flex-wrap: wrap; gap: 1rem; }
+      .about-card { flex: 1 1 calc(50% - 0.5rem); min-width: 140px; }
+
+      /* Facilities */
+      .facilities-grid { grid-template-columns: 1fr 1fr; }
+
+      /* Why */
+      .why-grid { grid-template-columns: 1fr; }
+      .why-item { padding: 1.2rem 0 !important; border-left: none !important; }
+
+      /* Footer */
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+      .footer-top > div:first-child { grid-column: 1 / -1; }
+
+      /* Sections */
+      section { padding: 4rem 5vw; }
+      .cta-section { padding: 5rem 5vw; }
+    }
+
+    /* ── MOBILE (≤ 600px) ── */
+    @media (max-width: 600px) {
+      /* Nav */
+      nav { padding: 0 4vw; height: 60px; }
+      .nav-logo { font-size: 1.6rem; }
+      .mobile-drawer { top: 60px; }
+
+      /* Hero */
+      .hero { padding: 100px 4vw 7rem; min-height: 100svh; }
+      .hero h1 { font-size: clamp(3rem, 15vw, 5rem); }
+      .hero p { font-size: 1rem; }
+      .hero-ctas { flex-direction: column; }
+      .btn-hero-primary, .btn-hero-secondary {
+        width: 100%;
+        padding: 1rem;
+        text-align: center;
+        justify-content: center;
+      }
+      .hero-stats {
+        position: relative;
+        bottom: auto; left: auto;
+        margin-top: 2.5rem;
+        gap: 1.2rem;
+        flex-wrap: wrap;
+        animation: none;
+      }
+      .stat-num { font-size: 2rem; }
+
+      /* Ticker */
+      .ticker-item { font-size: 0.85rem; padding: 0 1rem; }
+
+      /* Sections */
+      section { padding: 3.5rem 4vw; }
+      .section-title { font-size: clamp(2rem, 10vw, 3rem); }
+
+      /* About */
+      .about-cards-stack { flex-direction: column; }
+      .about-card { padding: 1.5rem; }
+      .about-card-title { font-size: 2.2rem; }
+
+      /* Facilities */
+      .facilities-grid { grid-template-columns: 1fr; }
+      .facility-card { padding: 2rem 1.5rem; }
+
+      /* Why */
+      .why-text { font-size: 0.95rem; }
+
+      /* CTA */
+      .cta-section { padding: 4rem 4vw; }
+      .cta-section .section-title { font-size: clamp(2.2rem, 10vw, 4rem); }
+      .cta-buttons { flex-direction: column; }
+      .btn-cta-primary, .btn-cta-secondary {
+        width: 100%;
+        padding: 1rem;
+        text-align: center;
+        justify-content: center;
+      }
+
+      /* Footer */
+      .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      footer { padding: 3rem 4vw 2rem; }
+    }
+
+    /* ── TINY (≤ 380px) ── */
+    @media (max-width: 380px) {
+      .hero h1 { font-size: clamp(2.5rem, 13vw, 3.5rem); }
+      .hero-eyebrow { font-size: 0.7rem; }
+      .stat-num { font-size: 1.7rem; }
+    }
+
+    /* ── TOUCH: remove hover effects that feel sticky ── */
+    @media (hover: none) {
+      .facility-card:hover::before { transform: scaleX(0); }
+      .facility-card:hover { background: var(--dark); }
+      .btn-hero-primary:hover, .btn-cta-primary:hover { transform: none; box-shadow: none; }
+      .btn-fire:hover { transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nav-logo">MS<span>.</span>Fitness</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#facilities">Facilities</a></li>
+      <li><a href="#why">Why Us</a></li>
+      <li><a href="#cta">Membership</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="/login" class="btn btn-ghost">Login</a>
+      <a href="/register" class="btn btn-fire">Sign Up</a>
+    </div>
+    <button class="nav-hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- MOBILE DRAWER -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <ul>
+      <li><a href="#about" class="drawer-link">About</a></li>
+      <li><a href="#facilities" class="drawer-link">Facilities</a></li>
+      <li><a href="#why" class="drawer-link">Why Us</a></li>
+      <li><a href="#cta" class="drawer-link">Membership</a></li>
+    </ul>
+    <div class="mobile-drawer-actions">
+      <a href="/login" class="btn btn-ghost">Login</a>
+      <a href="/register" class="btn btn-fire">Sign Up</a>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-stripe"></div>
+    <div class="hero-badge">
+      <div class="hero-badge-inner">NO<br>LIMITS</div>
+      <div class="hero-badge-sub">MS Fitness</div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Welcome to MS Fitness</div>
+      <h1>Transform<br>Your <span class="accent">Body.</span><br>Transform<br>Your Life.</h1>
+      <p>Join a community that pushes you to become stronger, healthier, and more confident every day. Modern equipment, expert trainers, and programs designed for every fitness level.</p>
+      <div class="hero-ctas">
+        <a href="/register" class="btn btn-hero-primary">Join Now</a>
+        <a href="#cta" class="btn btn-hero-secondary">Book Free Trial</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">500<span>+</span></div>
+        <div class="stat-label">Active Members</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">10<span>+</span></div>
+        <div class="stat-label">Expert Trainers</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">5<span>yr</span></div>
+        <div class="stat-label">Of Excellence</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker">
+    <div class="ticker-track">
+      <span class="ticker-item">Strength Training <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Cardio Zone <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Personal Training <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Weight Loss <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Muscle Building <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Endurance Training <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Wellness Programs <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Certified Trainers <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Flexible Plans <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Modern Equipment <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Strength Training <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Cardio Zone <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Personal Training <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Weight Loss <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Muscle Building <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Endurance Training <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Wellness Programs <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Certified Trainers <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Flexible Plans <span class="ticker-dot">◆</span></span>
+      <span class="ticker-item">Modern Equipment <span class="ticker-dot">◆</span></span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="about-grid">
+      <div class="about-text">
+        <div class="section-label reveal">Our Story</div>
+        <h2 class="section-title reveal">Your Fitness<br>Journey Starts<br><span style="color:var(--fire)">Here.</span></h2>
+        <p class="reveal">At MS Fitness, we believe fitness is more than just lifting weights—it's about building a healthier lifestyle. Our gym is designed to support beginners, fitness enthusiasts, and professional athletes with the right environment and guidance.</p>
+        <p class="reveal">With state-of-the-art equipment, experienced trainers, and a motivating atmosphere, we help you achieve your goals whether it's weight loss, muscle gain, endurance training, or overall wellness.</p>
+      </div>
+      <div class="about-visual reveal">
+        <div class="about-cards-stack">
+          <div class="about-card">
+            <div class="about-card-title">50+</div>
+            <div class="about-card-text">Members & counting</div>
+          </div>
+          <div class="about-card">
+            <div class="about-card-title">100%</div>
+            <div class="about-card-text">Dedicated to your progress</div>
+          </div>
+          <div class="about-card">
+            <div class="about-card-title">24/7</div>
+            <div class="about-card-text">Support & community</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FACILITIES -->
+  <section class="facilities" id="facilities">
+    <div class="facilities-header reveal">
+      <div class="section-label">What We Offer</div>
+      <h2 class="section-title">Everything You Need<br>to <span style="color:var(--fire)">Reach Your Goals</span></h2>
+    </div>
+    <div class="facilities-grid">
+      <div class="facility-card reveal">
+        <span class="facility-emoji">🏋️</span>
+        <div class="facility-name">Modern Equipment</div>
+        <p class="facility-desc">High-quality machines and free weights for every training style and fitness level.</p>
+      </div>
+      <div class="facility-card reveal">
+        <span class="facility-emoji">👨‍🏫</span>
+        <div class="facility-name">Certified Trainers</div>
+        <p class="facility-desc">Professional guidance and personalized training plans tailored to you.</p>
+      </div>
+      <div class="facility-card reveal">
+        <span class="facility-emoji">🎵</span>
+        <div class="facility-name">Motivating Environment</div>
+        <p class="facility-desc">Energetic music, positive community, and a space that drives you forward.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="why" id="why">
+    <div class="why-inner">
+      <div class="section-label reveal">Why MS Fitness</div>
+      <h2 class="section-title reveal">Why Members<br>Love <span style="color:rgba(255,255,255,0.85)">MS Fitness</span></h2>
+      <div class="why-grid">
+        <div class="why-item reveal"><span class="why-check">✔</span><span class="why-text">Friendly and supportive environment</span></div>
+        <div class="why-item reveal"><span class="why-check">✔</span><span class="why-text">Professional and experienced trainers</span></div>
+        <div class="why-item reveal"><span class="why-check">✔</span><span class="why-text">Modern and well-maintained equipment</span></div>
+        <div class="why-item reveal"><span class="why-check">✔</span><span class="why-text">Flexible membership plans for all budgets</span></div>
+        <div class="why-item reveal"><span class="why-check">✔</span><span class="why-text">Focus on results and overall wellness</span></div>
+        <div class="why-item reveal"><span class="why-check">✔</span><span class="why-text">Personalized programs for every fitness level</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="cta">
+    <div class="section-label reveal">Get Started</div>
+    <h2 class="section-title reveal">Ready to Start<br>Your <span style="color:var(--fire)">Fitness</span><br>Journey?</h2>
+    <p class="reveal">Take the first step toward a healthier, stronger you.</p>
+    <div class="cta-buttons reveal">
+      <a href="/register" class="btn btn-cta-primary">Join MS Fitness Today</a>
+      <a href="#" class="btn btn-cta-secondary">Contact Us</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div>
+        <a href="#" class="footer-logo">MS<span>.</span>Fitness</a>
+        <p class="footer-tagline">Helping you build strength, confidence, and a healthier lifestyle — one rep at a time.</p>
+        <div class="footer-contact">
+          <p>📍 Road no 8, Lakshmipuram, Rayachoti</p>
+          <p>📞 +91 00000 00000</p>
+          <p>📧 hello@msfitness.in</p>
+        </div>
+        <div class="social-links">
+          <a href="#" class="social-link">IG</a>
+          <a href="#" class="social-link">FB</a>
+          <a href="#" class="social-link">YT</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Quick Links</div>
+        <ul class="footer-links">
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#facilities">Facilities</a></li>
+          <li><a href="#why">Why Us</a></li>
+          <li><a href="#cta">Membership</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Account</div>
+        <ul class="footer-links">
+          <li><a href="/login">Login</a></li>
+          <li><a href="/register">Sign Up</a></li>
+          <li><a href="#">Member Portal</a></li>
+          <li><a href="#">Book a Trial</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2025 MS Fitness. All rights reserved.</span>
+      <span class="footer-copy">Built with 💪 and discipline.</span>
+    </div>
+  </footer>
+
+  <script>
+    // ── Hamburger / mobile drawer ──────────────────────────────────────────
+    const hamburger = document.getElementById('hamburger');
+    const drawer    = document.getElementById('mobileDrawer');
+
+    function toggleDrawer(open) {
+      hamburger.classList.toggle('open', open);
+      drawer.classList.toggle('open', open);
+      hamburger.setAttribute('aria-expanded', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+
+    hamburger.addEventListener('click', () => {
+      toggleDrawer(!drawer.classList.contains('open'));
+    });
+
+    // Close on nav link tap
+    document.querySelectorAll('.drawer-link').forEach(link => {
+      link.addEventListener('click', () => toggleDrawer(false));
+    });
+
+    // Close on outside tap
+    drawer.addEventListener('click', e => {
+      if (e.target === drawer) toggleDrawer(false);
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') toggleDrawer(false);
+    });
+
+    // ── Scroll reveal ──────────────────────────────────────────────────────
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+
+    // ── Ticker pause on hover / touch ──────────────────────────────────────
+    const track  = document.querySelector('.ticker-track');
+    const ticker = document.querySelector('.ticker');
+    ticker.addEventListener('mouseenter', () => track.style.animationPlayState = 'paused');
+    ticker.addEventListener('mouseleave', () => track.style.animationPlayState = 'running');
+  </script>
