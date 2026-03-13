@@ -111,7 +111,13 @@ def create_member():
     username = data.get("username", "").strip()
     phone    = data.get("phone", "").strip()
     password = data.get("password", "ms@123")
+    email  = data.get("email")
 
+    
+    if not email:
+        email = f"{username}@msfitness.com"
+    
+    email = email.strip()
     if not all([username, phone]):
         return jsonify({"error": "username and phone are required"}), 400
     if User.query.filter_by(username=username).first():
@@ -260,12 +266,15 @@ def dashboard_stats():
         "expiring_soon":      expiring_soon,
     })
 
-    @admin_bp.route("/api/admin/members/<int:id>/reset_password", methods=["POST"])
-    @login_required
-    @admin_required
-    def reset_password(id):
-        member = Member.query.get_or_404(id)
-        new_password = "member@123"
-        member.password = generate_password_hash(new_password)
-        db.session.commit()
-        return jsonify({"new_password": new_password})
+@admin_bp.route("/api/admin/members/<int:id>/reset_password", methods=["POST"])
+@login_required
+@admin_required
+def reset_password(id):
+    member = Member.query.get_or_404(id)
+    new_password = "member@ms4u"
+    member.password = generate_password_hash(new_password)
+    db.session.commit()
+    return jsonify({"new_password": new_password})
+
+
+
