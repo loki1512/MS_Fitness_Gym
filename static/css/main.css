@@ -677,3 +677,127 @@ textarea { resize: vertical; min-height: 80px; }
   .stats-row, .stats-row-5 { grid-template-columns: 1fr; }
   .plan-grid { grid-template-columns: 1fr; }
 }
+
+
+/* ─────────────────────────────────────────
+   TEXT VISIBILITY IMPROVEMENTS
+   (Non-destructive overrides)
+─────────────────────────────────────────*/
+
+/* Global base font size */
+body{
+  font-size:16px;
+  line-height:1.6;
+}
+
+/* Page Titles */
+.topbar-title{
+  font-size:1.35rem;
+  letter-spacing:0.1em;
+}
+
+/* Card titles */
+.card-title{
+  font-size:0.95rem;
+  color:var(--white);
+  letter-spacing:0.14em;
+}
+
+/* Card subtitles */
+.card-sub{
+  font-size:0.9rem;
+  color:var(--off);
+}
+
+/* Form Labels */
+.field-label,
+label{
+  font-size:0.8rem;
+  color:var(--white);
+  letter-spacing:0.12em;
+}
+
+/* Inputs text */
+input,
+textarea,
+select{
+  font-size:0.95rem;
+}
+
+/* Table headers */
+.data-table th{
+  font-size:0.8rem;
+  color:var(--white);
+  letter-spacing:0.12em;
+  background-color: #7125cf;
+}
+
+/* Table cells */
+.data-table td{
+  font-size:0.9rem;
+  color:var(--off);
+}
+
+/* Navigation items */
+.nav-item{
+  font-size:0.9rem;
+  letter-spacing:0.1em;
+}
+
+/* Sidebar username */
+.sidebar-username{
+  font-size:0.95rem;
+}
+
+/* Sidebar role */
+.sidebar-role{
+  font-size:0.75rem;
+}
+
+/* Stat labels */
+.stat-card-label{
+  font-size:0.75rem;
+}
+
+/* Stat values */
+.stat-card-value{
+  font-size:2.2rem;
+}
+
+/* Badge text */
+.badge{
+  font-size:0.7rem;
+}
+
+/* Buttons */
+.btn{
+  font-size:0.9rem;
+}
+
+/* Search input */
+.search-input{
+  font-size:0.95rem;
+}
+
+/* Drawer info */
+.drawer-info-row{
+  font-size:0.92rem;
+}
+
+/* Pagination buttons */
+.page-btn{
+  font-size:0.85rem;
+}
+
+/* Plan cards */
+.plan-name{
+  font-size:1.6rem;
+}
+
+.plan-price{
+  font-size:1.6rem;
+}
+
+.plan-desc{
+  font-size:0.9rem;
+}

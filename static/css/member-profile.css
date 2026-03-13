@@ -2,114 +2,89 @@
 
 .profile-page { display: flex; flex-direction: column; gap: 1.25rem; }
 
-/* Hero */
+/* ── Hero ─────────────────────────────────────────────────────────────────── */
 .profile-hero { margin-bottom: 0 !important; }
 
 .profile-hero-inner {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1.5rem;
   padding: 1.5rem;
   flex-wrap: wrap;
 }
 
 .profile-avatar {
-  width: 68px;
-  height: 68px;
+  width: 72px; height: 72px;
   border-radius: 50%;
   background: var(--fire);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: 2px solid rgba(255,60,0,0.35);
+  display: flex; align-items: center; justify-content: center;
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 2rem;
-  color: var(--white);
-  flex-shrink: 0;
-  border: 2px solid rgba(255,60,0,0.4);
+  font-size: 2rem; color: var(--white);
+  flex-shrink: 0; letter-spacing: 0.02em;
 }
 
-.profile-hero-info {
-  flex: 1;
-  min-width: 160px;
-}
+.profile-hero-info { flex: 1; min-width: 160px; }
 
 .profile-name {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 2.2rem;
-  letter-spacing: 0.02em;
-  color: var(--white);
-  line-height: 1;
+  font-size: 2.4rem; letter-spacing: 0.02em;
+  color: var(--white); line-height: 1;
   margin-bottom: 0.4rem;
 }
 
 .profile-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  font-size: 0.85rem;
-  flex-wrap: wrap;
-  color: var(--steel);
+  display: flex; align-items: center;
+  gap: 0.5rem; flex-wrap: wrap;
+  font-size: 0.85rem; color: var(--steel);
 }
-
-.profile-meta-sep { color: var(--mid2); }
+.profile-meta-sep { color: var(--mid2); font-size: 1rem; }
 
 .profile-hero-actions {
-  display: flex;
-  gap: 0.6rem;
-  flex-shrink: 0;
-  flex-wrap: wrap;
+  display: flex; gap: 0.6rem;
+  flex-shrink: 0; flex-wrap: wrap;
 }
 
-/* 2-col grid */
+/* ── Grid layout ──────────────────────────────────────────────────────────── */
 .profile-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.25rem;
 }
-
 .profile-sub-card { grid-column: 1 / -1; }
 
-/* ── Info rows ────────────────────────────────────────────────────────────── */
+/* ── Info rows (Personal Info card) ──────────────────────────────────────── */
+.info-rows-wrap { display: block; }
+
 .info-row {
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: space-between;
-  padding: 0.7rem 0;
+  padding: 0.65rem 0;
   border-bottom: 1px solid var(--border);
-  gap: 1.5rem;
+  gap: 2rem;
+  min-height: 38px;
 }
-
 .info-row:first-child { padding-top: 0; }
 .info-row:last-child  { border-bottom: none; padding-bottom: 0; }
 
 .info-key {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--steel);
-  flex-shrink: 0;
-  white-space: nowrap;
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--steel); flex-shrink: 0; white-space: nowrap;
 }
 
 .info-val {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--white);
-  text-align: right;
+  font-size: 0.9rem; font-weight: 500;
+  color: var(--white); text-align: right;
   word-break: break-word;
 }
-
-.info-val-empty {
-  color: var(--steel);
-  font-style: italic;
-  font-weight: 400;
-}
+.info-val-empty { color: var(--steel); font-style: italic; font-weight: 400; }
 
 /* ── Physical stat tiles ──────────────────────────────────────────────────── */
 .phys-grid {
-  display: grid;
+  display: grid !important;
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
   margin-bottom: 0.75rem;
@@ -119,81 +94,65 @@
   background: var(--mid);
   border: 1px solid var(--border);
   border-radius: 4px;
-  padding: 1rem;
+  padding: 1.1rem 1rem;
   text-align: center;
+  display: block;
 }
 
 .phys-tile-val {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 2.2rem;
-  line-height: 1;
-  color: var(--white);
+  font-size: 2.4rem; line-height: 1;
+  color: var(--white); display: block;
 }
 
 .phys-tile-unit {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--fire);
-  margin-left: 2px;
+  font-size: 0.9rem; font-weight: 700;
+  color: var(--fire); margin-left: 3px;
 }
 
 .phys-tile-label {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--steel);
-  margin-top: 0.3rem;
+  font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--steel); margin-top: 0.35rem; display: block;
 }
 
-/* BMI row */
+/* BMI */
 .bmi-wrap {
   background: var(--mid);
   border: 1px solid var(--border);
   border-radius: 4px;
   padding: 0.75rem 1rem;
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
 }
-
 .bmi-label {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase;
   color: var(--steel);
 }
-
 .bmi-val {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.5rem;
-  color: var(--white);
-  line-height: 1;
+  font-size: 1.6rem; line-height: 1; color: var(--white);
 }
-
 .bmi-cat {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 3px 10px;
-  border-radius: 2px;
+  font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 2px;
 }
-
 .bmi-normal      { background: rgba(34,197,94,0.15);  color: #4ade80; }
 .bmi-overweight  { background: rgba(245,158,11,0.15); color: #fcd34d; }
 .bmi-obese       { background: rgba(239,68,68,0.15);  color: #f87171; }
 .bmi-underweight { background: rgba(96,165,250,0.15); color: #93c5fd; }
 
-/* ── Subscription summary tiles ───────────────────────────────────────────── */
+/* ── Subscription tiles ───────────────────────────────────────────────────── */
 .sub-summary-grid {
-  display: grid;
+  display: grid !important;
   grid-template-columns: repeat(4, 1fr);
   gap: 0.75rem;
 }
@@ -204,113 +163,82 @@
   border-radius: 4px;
   padding: 1rem;
   text-align: center;
+  display: block;
 }
 
 .sub-stat-val {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.5rem;
-  line-height: 1;
-  color: var(--white);
-  word-break: break-word;
+  font-size: 1.5rem; line-height: 1;
+  color: var(--white); word-break: break-word;
+  display: block;
 }
 
 .sub-stat-label {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--steel);
-  margin-top: 0.3rem;
+  font-size: 0.62rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--steel); margin-top: 0.3rem; display: block;
 }
 
 /* ── Modal extras ─────────────────────────────────────────────────────────── */
 .modal-header {
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: space-between;
 }
 
 .modal-x-close {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--steel);
-  font-size: 1rem;
-  padding: 2px 6px;
-  transition: color 0.2s;
-  line-height: 1;
+  background: none; border: none; cursor: pointer;
+  color: var(--steel); font-size: 1rem;
+  padding: 2px 6px; transition: color 0.2s; line-height: 1;
 }
 .modal-x-close:hover { color: var(--white); }
 
 .modal-section-label {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--fire);
-  margin-bottom: 0.9rem;
+  font-size: 0.68rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--fire); margin-bottom: 0.9rem; display: block;
 }
 
 .modal-divider {
-  border: none;
-  border-top: 1px solid var(--border);
+  border: none; border-top: 1px solid var(--border);
   margin: 1.25rem 0;
 }
 
-/* Password input with eye toggle */
-.pw-input-wrap {
-  position: relative;
-}
-.pw-input-wrap input {
-  padding-right: 2.6rem;
-}
+/* Password input + eye toggle */
+.pw-input-wrap { position: relative; }
+.pw-input-wrap input { padding-right: 2.6rem !important; }
+
 .pw-toggle {
-  position: absolute;
-  right: 0.7rem;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--steel);
-  display: flex;
-  align-items: center;
-  padding: 0;
-  transition: color 0.2s;
+  position: absolute; right: 0.7rem;
+  top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer;
+  color: var(--steel); display: flex; align-items: center;
+  padding: 0; transition: color 0.2s;
 }
 .pw-toggle:hover { color: var(--white); }
 .pw-toggle svg { width: 17px; height: 17px; }
 
-/* Strength meter */
+/* Password strength */
 .pw-strength-wrap {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin: 0.4rem 0 0.15rem;
+  display: flex !important; align-items: center;
+  gap: 0.75rem; margin: 0.4rem 0 0.2rem;
 }
 .pw-bar {
-  flex: 1;
-  height: 3px;
-  background: var(--mid2);
-  border-radius: 2px;
-  overflow: hidden;
+  flex: 1; height: 3px;
+  background: var(--mid2); border-radius: 2px; overflow: hidden;
 }
 .pw-fill {
-  height: 100%;
-  width: 0;
-  border-radius: 2px;
-  transition: width 0.3s ease, background-color 0.3s ease;
+  height: 100%; width: 0; border-radius: 2px;
+  transition: width 0.3s, background-color 0.3s;
 }
 .pw-fill.weak   { width: 33%;  background: var(--danger); }
 .pw-fill.fair   { width: 66%;  background: var(--warn); }
 .pw-fill.strong { width: 100%; background: var(--success); }
 .pw-strength-label {
-  font-size: 0.75rem;
-  color: var(--steel);
-  white-space: nowrap;
-  min-width: 80px;
+  font-size: 0.75rem; color: var(--steel);
+  white-space: nowrap; min-width: 90px;
 }
 
 /* ── Responsive ───────────────────────────────────────────────────────────── */
@@ -318,7 +246,7 @@
   .profile-grid { grid-template-columns: 1fr; }
   .profile-sub-card { grid-column: 1; }
   .sub-summary-grid { grid-template-columns: 1fr 1fr; }
-  .modal-grid { grid-template-columns: 1fr; }
+  .modal-grid { grid-template-columns: 1fr !important; }
   .modal-grid .field-full { grid-column: 1; }
 }
 
@@ -327,4 +255,58 @@
   .profile-hero-actions { width: 100%; }
   .profile-hero-actions .btn { flex: 1; justify-content: center; }
   .sub-summary-grid { grid-template-columns: 1fr 1fr; }
+  .phys-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── Info banner inside password modals ───────────────────────────────────── */
+.pw-info-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  background: rgba(55,138,221,0.08);
+  border: 1px solid rgba(55,138,221,0.2);
+  border-left: 3px solid #378ADD;
+  border-radius: 3px;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  color: var(--off);
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+}
+.pw-info-banner svg { width: 16px; height: 16px; flex-shrink: 0; color: #378ADD; margin-top: 1px; }
+.pw-info-banner a { color: var(--fire); text-decoration: none; }
+.pw-info-banner a:hover { text-decoration: underline; }
+
+.pw-info-warn {
+  background: rgba(245,158,11,0.08);
+  border-color: rgba(245,158,11,0.2);
+  border-left-color: var(--warn);
+}
+.pw-info-warn svg { color: var(--warn); }
+
+/* ── Password field spacing inside modals ─────────────────────────────────── */
+.pw-field { margin-bottom: 1.1rem; }
+.pw-field:last-of-type { margin-bottom: 0; }
+
+/* ── field-opt helper ─────────────────────────────────────────────────────── */
+.field-opt { color: var(--steel); font-size: 0.78rem; font-weight: 400; }
+
+/* ── Empty states ─────────────────────────────────────────────────────────── */
+.phys-empty {
+  color: var(--steel); font-size: 0.85rem;
+  text-align: center; padding: 0.75rem 0;
+}
+.sub-empty {
+  text-align: center; padding: 1.5rem 0;
+}
+.sub-empty-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+
+.sub-warn-banner {
+  margin-top: 1rem;
+  padding: 0.65rem 1rem;
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 3px;
+  font-size: 0.85rem;
+  color: var(--warn);
 }

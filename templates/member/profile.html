@@ -2,7 +2,7 @@
 {% block title %}My Profile – MS Fitness{% endblock %}
 {% block page_title %}My Profile{% endblock %}
 {% block body_class %}member-body{% endblock %}
-{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/member-profile.css') }}"/> {% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/member-profile.css') }}"/>{% endblock %}
 
 {% block sidebar_nav %}
 <a href="{{ url_for('pages.member_dashboard') }}" class="nav-item">
@@ -22,32 +22,38 @@
 {% block content %}
 <div class="profile-page" id="profile-page">
 
-  <!-- Hero card -->
+  <!-- ── HERO ─────────────────────────────────────────────────────────────── -->
   <div class="profile-hero card">
     <div class="profile-hero-inner">
       <div class="profile-avatar" id="profile-avatar">?</div>
       <div class="profile-hero-info">
         <div class="profile-name" id="profile-name">Loading…</div>
         <div class="profile-meta">
-          <span id="profile-username" style="color:var(--steel);">@—</span>
+          <span id="profile-username">@—</span>
           <span class="profile-meta-sep">·</span>
-          <span id="profile-joined" style="color:var(--steel);">Joined —</span>
+          <span id="profile-joined">Joined —</span>
           <span class="profile-meta-sep">·</span>
           <span id="profile-streak" style="color:var(--fire);">0🔥</span>
         </div>
       </div>
       <div class="profile-hero-actions">
-        <button class="btn btn-fire btn-sm" id="btn-edit-profile">Edit Profile</button>
+        <button class="btn btn-fire btn-sm" id="btn-edit-profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Edit Profile
+        </button>
+        
       </div>
     </div>
   </div>
 
+  <!-- ── MAIN GRID ─────────────────────────────────────────────────────────── -->
   <div class="profile-grid">
 
     <!-- Personal info -->
     <div class="card">
       <div class="card-header">
         <h3 class="card-title">Personal Info</h3>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('btn-edit-profile').click()">Edit</button>
       </div>
       <div class="card-body" id="personal-info-body">
         <div class="skeleton-block"></div>
@@ -58,6 +64,7 @@
     <div class="card">
       <div class="card-header">
         <h3 class="card-title">Physical Stats</h3>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('btn-edit-profile').click()">Edit</button>
       </div>
       <div class="card-body" id="physical-stats-body">
         <div class="skeleton-block"></div>
@@ -78,15 +85,18 @@
   </div>
 </div>
 
-<!-- ── EDIT PROFILE MODAL ─────────────────────────────────────────────────── -->
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     EDIT PROFILE MODAL
+     ══════════════════════════════════════════════════════════════════════ -->
 <div class="modal-backdrop" id="edit-profile-modal" style="display:none;">
   <div class="modal modal-lg">
     <div class="modal-header">
       <h3>Edit Profile</h3>
-      <button class="modal-x-close" id="edit-profile-close" aria-label="Close">✕</button>
+      <button class="modal-x-close" id="edit-profile-close">✕</button>
     </div>
-
     <div class="modal-body">
+
       <div class="modal-section-label">Account</div>
       <div class="modal-grid">
         <div class="field">
@@ -98,36 +108,35 @@
           <input type="tel" id="edit-phone" placeholder="+91 00000 00000"/>
         </div>
         <div class="field field-full">
-          <label>Email <span style="color:var(--steel);font-size:0.78rem;">(optional)</span></label>
+          <label>Email <span class="field-opt">(optional)</span></label>
           <input type="email" id="edit-email" placeholder="you@example.com"/>
         </div>
       </div>
 
       <div class="modal-divider"></div>
 
-      <div class="modal-section-label">Profile</div>
+      <div class="modal-section-label">Body & Background</div>
       <div class="modal-grid">
         <div class="field">
-          <label>Profession <span style="color:var(--steel);font-size:0.78rem;">(optional)</span></label>
+          <label>Profession <span class="field-opt">(optional)</span></label>
           <input type="text" id="edit-profession" placeholder="e.g. Software Engineer"/>
         </div>
         <div class="field">
-          <label>Date of Birth <span style="color:var(--steel);font-size:0.78rem;">(optional)</span></label>
+          <label>Date of Birth <span class="field-opt">(optional)</span></label>
           <input type="date" id="edit-dob" max=""/>
         </div>
         <div class="field">
-          <label>Height <span style="color:var(--steel);font-size:0.78rem;">(cm, optional)</span></label>
+          <label>Height <span class="field-opt">(cm)</span></label>
           <input type="number" id="edit-height" placeholder="e.g. 175" min="100" max="250" step="0.1"/>
         </div>
         <div class="field">
-          <label>Weight <span style="color:var(--steel);font-size:0.78rem;">(kg, optional)</span></label>
+          <label>Weight <span class="field-opt">(kg)</span></label>
           <input type="number" id="edit-weight" placeholder="e.g. 70" min="30" max="300" step="0.1"/>
         </div>
       </div>
 
       <div class="field-error" id="edit-profile-error"></div>
     </div>
-
     <div class="modal-footer">
       <button class="btn btn-ghost" id="edit-profile-cancel">Cancel</button>
       <button class="btn btn-fire" id="edit-profile-save">Save Changes</button>
@@ -135,31 +144,40 @@
   </div>
 </div>
 
-<!-- ── CHANGE PASSWORD MODAL ──────────────────────────────────────────────── -->
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     CHANGE PASSWORD MODAL  (needs current password)
+     ══════════════════════════════════════════════════════════════════════ -->
 <div class="modal-backdrop" id="change-pw-modal" style="display:none;">
   <div class="modal">
     <div class="modal-header">
       <h3>Change Password</h3>
-      <button class="modal-x-close" id="change-pw-close" aria-label="Close">✕</button>
+      <button class="modal-x-close" id="change-pw-close">✕</button>
     </div>
-
     <div class="modal-body">
-      <div class="field" style="margin-bottom:1rem;">
+
+      <div class="pw-info-banner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        You must enter your <strong>current password</strong> to set a new one.
+        Forgot it? Use <a href="#" id="switch-to-reset">Reset Password</a> instead.
+      </div>
+
+      <div class="field pw-field">
         <label>Current Password</label>
         <div class="pw-input-wrap">
           <input type="password" id="pw-current" placeholder="Your current password" autocomplete="current-password"/>
-          <button type="button" class="pw-toggle" data-target="pw-current" aria-label="Show">
+          <button type="button" class="pw-toggle" data-target="pw-current">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
         </div>
         <div class="field-error" id="err-pw-current"></div>
       </div>
 
-      <div class="field" style="margin-bottom:1rem;">
+      <div class="field pw-field">
         <label>New Password</label>
         <div class="pw-input-wrap">
           <input type="password" id="pw-new" placeholder="Min. 8 characters" autocomplete="new-password"/>
-          <button type="button" class="pw-toggle" data-target="pw-new" aria-label="Show">
+          <button type="button" class="pw-toggle" data-target="pw-new">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
         </div>
@@ -170,26 +188,77 @@
         <div class="field-error" id="err-pw-new"></div>
       </div>
 
-      <div class="field">
+      <div class="field pw-field">
         <label>Confirm New Password</label>
         <div class="pw-input-wrap">
           <input type="password" id="pw-confirm" placeholder="Repeat new password" autocomplete="new-password"/>
-          <button type="button" class="pw-toggle" data-target="pw-confirm" aria-label="Show">
+          <button type="button" class="pw-toggle" data-target="pw-confirm">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
         </div>
         <div class="field-error" id="err-pw-confirm"></div>
       </div>
 
-      <div class="field-error" style="margin-top:1rem;" id="err-pw-global"></div>
+      <div class="field-error" id="err-pw-global"></div>
     </div>
-
     <div class="modal-footer">
       <button class="btn btn-ghost" id="change-pw-cancel">Cancel</button>
       <button class="btn btn-fire" id="change-pw-save">Update Password</button>
     </div>
   </div>
 </div>
+
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     RESET PASSWORD MODAL  (no current password needed)
+     ══════════════════════════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="reset-pw-modal" style="display:none;">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Reset Password</h3>
+      <button class="modal-x-close" id="reset-pw-close">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="pw-info-banner pw-info-warn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        This will <strong>immediately replace</strong> your current password. You are already logged in so no verification is needed.
+      </div>
+
+      <div class="field pw-field">
+        <label>New Password</label>
+        <div class="pw-input-wrap">
+          <input type="password" id="reset-pw-new" placeholder="Min. 8 characters" autocomplete="new-password"/>
+          <button type="button" class="pw-toggle" data-target="reset-pw-new">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <div class="pw-strength-wrap">
+          <div class="pw-bar"><div class="pw-fill" id="reset-pw-strength-fill"></div></div>
+          <span class="pw-strength-label" id="reset-pw-strength-label">Enter a new password</span>
+        </div>
+        <div class="field-error" id="err-reset-pw-new"></div>
+      </div>
+
+      <div class="field pw-field">
+        <label>Confirm New Password</label>
+        <div class="pw-input-wrap">
+          <input type="password" id="reset-pw-confirm" placeholder="Repeat new password" autocomplete="new-password"/>
+          <button type="button" class="pw-toggle" data-target="reset-pw-confirm">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <div class="field-error" id="err-reset-pw-confirm"></div>
+      </div>
+
+      <div class="field-error" id="err-reset-pw-global"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="reset-pw-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
 
 {% block scripts %}

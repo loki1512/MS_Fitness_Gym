@@ -79,7 +79,6 @@ def get_member(member_id):
     })
 
 
-
 @admin_bp.route("/members/<int:member_id>", methods=["PATCH"])
 @login_required
 @admin_required
@@ -111,13 +110,7 @@ def create_member():
     username = data.get("username", "").strip()
     phone    = data.get("phone", "").strip()
     password = data.get("password", "ms@123")
-    email  = data.get("email")
 
-    
-    if not email:
-        email = f"{username}@msfitness.com"
-    
-    email = email.strip()
     if not all([username, phone]):
         return jsonify({"error": "username and phone are required"}), 400
     if User.query.filter_by(username=username).first():
@@ -266,15 +259,30 @@ def dashboard_stats():
         "expiring_soon":      expiring_soon,
     })
 
-@admin_bp.route("/api/admin/members/<int:id>/reset_password", methods=["POST"])
+# ── Member password reset (admin only) ────────────────────────────────────────
+
+@admin_bp.route("/members/<int:member_id>/reset_password", methods=["POST"])
 @login_required
 @admin_required
-def reset_password(id):
-    member = Member.query.get_or_404(id)
-    new_password = "member@ms4u"
-    member.password = generate_password_hash(new_password)
+def reset_member_password(member_id):
+    """Admin resets a member's password without needing the current one."""
+    m = Member.query.get_or_404(member_id)
+    data         = request.get_json(silent=True) or {}
+    new_password = data.get("new_password", "")
+    confirm      = data.get("confirm_password", "")
+
+    if not new_password or not confirm:
+        return jsonify({"error": "New password and confirmation are required"}), 400
+
+    if new_password != confirm:
+        return jsonify({"error": "Passwords do not match"}), 400
+
+    if len(new_password) < 8:
+        return jsonify({"error": "Password must be at least 8 characters"}), 400
+
+    if len(new_password.encode()) > 72:
+        return jsonify({"error": "Password must be 72 characters or fewer"}), 400
+
+    m.user.password = hash_password(new_password)
     db.session.commit()
-    return jsonify({"new_password": new_password})
-
-
-
+    return jsonify({"message": f"Password reset for {m.name}"})
