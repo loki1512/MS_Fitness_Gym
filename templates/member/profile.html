@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% block title %}My Profile – MS Fitness{% endblock %}
+{% block page_title %}My Profile{% endblock %}
+{% block body_class %}member-body{% endblock %}
+{% block head %}<link rel="stylesheet" href="{{ url_for('static', filename='css/member-profile.css') }}"/> {% endblock %}
+
+{% block sidebar_nav %}
+<a href="{{ url_for('pages.member_dashboard') }}" class="nav-item">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+  Dashboard
+</a>
+<a href="{{ url_for('pages.member_subscription') }}" class="nav-item">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/></svg>
+  Subscription
+</a>
+<a href="{{ url_for('pages.member_profile') }}" class="nav-item active">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+  Profile
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="profile-page" id="profile-page">
+
+  <!-- Hero card -->
+  <div class="profile-hero card">
+    <div class="profile-hero-inner">
+      <div class="profile-avatar" id="profile-avatar">?</div>
+      <div class="profile-hero-info">
+        <div class="profile-name" id="profile-name">Loading…</div>
+        <div class="profile-meta">
+          <span id="profile-username" style="color:var(--steel);">@—</span>
+          <span class="profile-meta-sep">·</span>
+          <span id="profile-joined" style="color:var(--steel);">Joined —</span>
+          <span class="profile-meta-sep">·</span>
+          <span id="profile-streak" style="color:var(--fire);">0🔥</span>
+        </div>
+      </div>
+      <div class="profile-hero-actions">
+        <button class="btn btn-fire btn-sm" id="btn-edit-profile">Edit Profile</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-grid">
+
+    <!-- Personal info -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Personal Info</h3>
+      </div>
+      <div class="card-body" id="personal-info-body">
+        <div class="skeleton-block"></div>
+      </div>
+    </div>
+
+    <!-- Physical stats -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Physical Stats</h3>
+      </div>
+      <div class="card-body" id="physical-stats-body">
+        <div class="skeleton-block"></div>
+      </div>
+    </div>
+
+    <!-- Subscription summary -->
+    <div class="card profile-sub-card">
+      <div class="card-header">
+        <h3 class="card-title">Active Subscription</h3>
+        <a href="{{ url_for('pages.member_subscription') }}" class="btn btn-ghost btn-sm">Manage</a>
+      </div>
+      <div class="card-body" id="profile-sub-body">
+        <div class="skeleton-block"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── EDIT PROFILE MODAL ─────────────────────────────────────────────────── -->
+<div class="modal-backdrop" id="edit-profile-modal" style="display:none;">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3>Edit Profile</h3>
+      <button class="modal-x-close" id="edit-profile-close" aria-label="Close">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="modal-section-label">Account</div>
+      <div class="modal-grid">
+        <div class="field">
+          <label>Full Name</label>
+          <input type="text" id="edit-name" placeholder="Your full name"/>
+        </div>
+        <div class="field">
+          <label>Phone</label>
+          <input type="tel" id="edit-phone" placeholder="+91 00000 00000"/>
+        </div>
+        <div class="field field-full">
+          <label>Email <span style="color:var(--steel);font-size:0.78rem;">(optional)</span></label>
+          <input type="email" id="edit-email" placeholder="you@example.com"/>
+        </div>
+      </div>
+
+      <div class="modal-divider"></div>
+
+      <div class="modal-section-label">Profile</div>
+      <div class="modal-grid">
+        <div class="field">
+          <label>Profession <span style="color:var(--steel);font-size:0.78rem;">(optional)</span></label>
+          <input type="text" id="edit-profession" placeholder="e.g. Software Engineer"/>
+        </div>
+        <div class="field">
+          <label>Date of Birth <span style="color:var(--steel);font-size:0.78rem;">(optional)</span></label>
+          <input type="date" id="edit-dob" max=""/>
+        </div>
+        <div class="field">
+          <label>Height <span style="color:var(--steel);font-size:0.78rem;">(cm, optional)</span></label>
+          <input type="number" id="edit-height" placeholder="e.g. 175" min="100" max="250" step="0.1"/>
+        </div>
+        <div class="field">
+          <label>Weight <span style="color:var(--steel);font-size:0.78rem;">(kg, optional)</span></label>
+          <input type="number" id="edit-weight" placeholder="e.g. 70" min="30" max="300" step="0.1"/>
+        </div>
+      </div>
+
+      <div class="field-error" id="edit-profile-error"></div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="edit-profile-cancel">Cancel</button>
+      <button class="btn btn-fire" id="edit-profile-save">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── CHANGE PASSWORD MODAL ──────────────────────────────────────────────── -->
+<div class="modal-backdrop" id="change-pw-modal" style="display:none;">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Change Password</h3>
+      <button class="modal-x-close" id="change-pw-close" aria-label="Close">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="field" style="margin-bottom:1rem;">
+        <label>Current Password</label>
+        <div class="pw-input-wrap">
+          <input type="password" id="pw-current" placeholder="Your current password" autocomplete="current-password"/>
+          <button type="button" class="pw-toggle" data-target="pw-current" aria-label="Show">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <div class="field-error" id="err-pw-current"></div>
+      </div>
+
+      <div class="field" style="margin-bottom:1rem;">
+        <label>New Password</label>
+        <div class="pw-input-wrap">
+          <input type="password" id="pw-new" placeholder="Min. 8 characters" autocomplete="new-password"/>
+          <button type="button" class="pw-toggle" data-target="pw-new" aria-label="Show">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <div class="pw-strength-wrap">
+          <div class="pw-bar"><div class="pw-fill" id="pw-strength-fill"></div></div>
+          <span class="pw-strength-label" id="pw-strength-label">Enter a new password</span>
+        </div>
+        <div class="field-error" id="err-pw-new"></div>
+      </div>
+
+      <div class="field">
+        <label>Confirm New Password</label>
+        <div class="pw-input-wrap">
+          <input type="password" id="pw-confirm" placeholder="Repeat new password" autocomplete="new-password"/>
+          <button type="button" class="pw-toggle" data-target="pw-confirm" aria-label="Show">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <div class="field-error" id="err-pw-confirm"></div>
+      </div>
+
+      <div class="field-error" style="margin-top:1rem;" id="err-pw-global"></div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="change-pw-cancel">Cancel</button>
+      <button class="btn btn-fire" id="change-pw-save">Update Password</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/member-profile.js') }}"></script>
+{% endblock %}

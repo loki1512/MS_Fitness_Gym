@@ -79,6 +79,7 @@ def get_member(member_id):
     })
 
 
+
 @admin_bp.route("/members/<int:member_id>", methods=["PATCH"])
 @login_required
 @admin_required
@@ -258,3 +259,13 @@ def dashboard_stats():
         "month_revenue":      round(float(month_revenue), 2),
         "expiring_soon":      expiring_soon,
     })
+
+    @admin_bp.route("/api/admin/members/<int:id>/reset_password", methods=["POST"])
+    @login_required
+    @admin_required
+    def reset_password(id):
+        member = Member.query.get_or_404(id)
+        new_password = "member@123"
+        member.password = generate_password_hash(new_password)
+        db.session.commit()
+        return jsonify({"new_password": new_password})

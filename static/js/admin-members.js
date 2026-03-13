@@ -73,6 +73,10 @@ async function loadMembers(page = 1, q = '') {
               onclick="openMemberDrawer(${m.user_id})">
               View
             </button>
+            <button class="btn btn-ghost btn-sm"
+              onclick="openMemberDrawer(${m.user_id})">
+              Forgot Password
+            </button>
           </td>
         </tr>`;
 

@@ -1,9 +1,10 @@
 import uuid
 from datetime import date
 from flask import Blueprint, request, jsonify
-from flask_security import login_required, current_user, hash_password
+from flask_security import login_required, current_user, hash_password, verify_password
 from extensions import db
 from models import User, Role, Member, Subscription, Transaction, Attendance, Plan
+# from werkzeug.security import check_password_hash
 
 member_bp = Blueprint("member", __name__)
 
@@ -93,6 +94,40 @@ def get_profile():
     })
 
 
+
+import bcrypt
+
+@member_bp.route("/profile/update_password", methods=["POST"])
+@login_required
+def update_password():
+    data             = request.get_json(silent=True) or {}
+    current_password = data.get("current_password", "")
+    new_password     = data.get("new_password", "")
+
+    if not current_password or not new_password:
+        return jsonify({"error": "Current and new passwords are required"}), 400
+
+    if len(new_password) < 8:
+        return jsonify({"error": "New password must be at least 8 characters"}), 400
+
+    # current_user.password is a bcrypt hash like $2b$12$...
+    # bcrypt.checkpw handles it directly
+    try:
+        match = bcrypt.checkpw(
+            current_password.encode("utf-8"),
+            current_user.password.encode("utf-8"),
+        )
+    except Exception:
+        match = False
+
+    if not match:
+        return jsonify({"error": "Current password is incorrect"}), 400
+
+    current_user.password = hash_password(new_password)
+    db.session.commit()
+    return jsonify({"message": "Password updated successfully"})
+
+    
 @member_bp.route("/profile", methods=["PATCH"])
 @login_required
 def update_profile():
@@ -278,3 +313,4 @@ def attendance_history():
 def list_plans():
     plans = Plan.query.filter_by(is_active=True).order_by(Plan.price).all()
     return jsonify([p.to_dict() for p in plans])
+

@@ -51,8 +51,8 @@ def admin_payments():
 @pages_bp.route("/admin/plans")
 @login_required
 def admin_plans():
-    # if not (_role("admin") or _role("super_admin")):
-    #     return redirect(url_for("pages.member_dashboard"))
+    if not (_role("admin") or _role("super_admin")):
+        return redirect(url_for("pages.member_dashboard"))
     return render_template("admin/plans.html")
 
 
@@ -60,6 +60,12 @@ def admin_plans():
 @login_required
 def member_subscription():
     return render_template("member/subscription.html")
+
+
+@pages_bp.route("/member/profile")
+@login_required
+def member_profile():
+    return render_template("member/profile.html")
 
 
 @pages_bp.route("/register")
